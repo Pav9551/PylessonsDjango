@@ -48,6 +48,8 @@ class Post(models.Model):
     # Связь с тегами
     # многим ко многим
     tags = models.ManyToManyField(Tag)
+    def __str__(self):
+        return self.name
 
 
 
