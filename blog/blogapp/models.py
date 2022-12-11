@@ -29,3 +29,20 @@ class Category(models.Model):
     models.URLField
     models.EmailField
     '''
+class Tag(models.Model):
+    name = models.CharField(max_length=16, unique=True)
+
+class Post(models.Model):
+    name = models.CharField(max_length= 32, unique= True)
+    text = models.TextField
+    create = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now= True)
+    # Связь с категорией
+    # один ко многим
+    category = models.ForeignKey(Category, on_delete= models.CASCADE)
+    # Связь с тегами
+    # многим ко многим
+    tags = models.ManyToManyField(Tag)
+
+
+
