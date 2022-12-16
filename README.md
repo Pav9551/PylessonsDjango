@@ -52,10 +52,6 @@ python manage.py migrate
 ```curl 
 python manage.py createsuperuser
 ```
-
-
-
-
 ## Пример использования
 Чтобы протестировать веб-сервис необходимо:
  - загрузить данные в базу:
