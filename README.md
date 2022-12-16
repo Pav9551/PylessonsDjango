@@ -32,6 +32,12 @@ pip3 install -r requirements.txt
 ```curl 
 SECRET_KEY = 'django-insecure-1234567890'
  ```
+
+ - перейти в папку blog с файлом manage.py:
+```curl 
+cd blog
+ ```
+
  - сбросить все миграции:
 ```curl 
 python manage.py migrate blogapp zero --fake
