@@ -19,9 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from dotenv import load_dotenv
 from os import getenv,path,environ
 # метода ищет файл env и переменные из него
-dotenv_path = ""
-dotenv_path = path.join(path.dirname(__file__), '.env')
-dotenv_path = dotenv_path.replace(r"\blog\blog","")#на 2 папки вврех
+dotenv_path = (BASE_DIR.parent / '.env').__str__()
 if path.exists(dotenv_path):
     load_dotenv(dotenv_path)
     print(".env: ok " + dotenv_path)
