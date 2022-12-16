@@ -22,7 +22,7 @@
 ## Установка веб-сервиса
  - Для установки веб-сервиса необходимо скопировать содержимое репозитория на диск:
 ```curl   
-git clone https://github.com/Pav9551/PylessonsDjango/tree/nu_20-orm-edadeal
+git clone https://github.com/Pav9551/PylessonsDjango
 ```
  - Для работы сервиса необходимо поставить зависимости
 ```curl   
