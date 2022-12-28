@@ -7,14 +7,17 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-        {% for item in posts %}
+        {% for item in merch %}
         <div class="post-preview">
-            <a href="{% url 'blog:post' id=item.id %}">
+            <a href="{% url 'blog:merch' id=item.id %}">
                 <h2 class="post-title">
-                    {{ item.name }}
+                    {{ item.good }}
                 </h2>
                 <h3 class="post-subtitle">
-                    Описание
+                    {{ item.name }}
+                </h3>
+                <h3 class="post-subtitle">
+                    {{ item.market_name }}
                 </h3>
             </a>
             <p class="post-meta">Posted by

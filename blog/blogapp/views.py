@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good
+from .models import Good, Merchandise
 # Create your views here.
 def main_view(request):
-    good = Good.objects.all()
-    return render(request, 'blogapp/index.html', context={'posts': good})
+    merch = Merchandise.objects.all()
+    return render(request, 'blogapp/index.html', context={'merch': merch})
 def post(request, id):
-    good = get_object_or_404(Good, id=id)
-    return render(request, 'blogapp/post.html', context={'post': good})
+    merch = get_object_or_404(Merchandise, id=id)
+    return render(request, 'blogapp/merch.html', context={'merch': merch})
