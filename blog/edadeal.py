@@ -86,8 +86,8 @@ class ED:
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
         if self.df_res.empty:
-            print(f'Магазин {self.shop} не предоставил скидки по данным товарам')
-            return -1
+            print(f'Магазин {self.shop} не предоставил скидки')
+            return -2
         for good in self.excel_data_df.name:
             count = 0
             for good_discount in self.df_res.name:
@@ -99,7 +99,11 @@ class ED:
                     'name': [good_discount]})
                     data_frame = pd.concat([data_frame, df])
                 count = count + 1
+        if data_frame.empty:
+            print(f'Магазин {self.shop} не предоставил скидки на данные товары')
+            return -1
         data = data_frame.merge(self.df_res, on=['name'], how='left')
+
         data = data.drop_duplicates(subset=['name'])
         #data.to_excel(f"{self.shop}.xlsx", index=False)
         data = data.reset_index()
