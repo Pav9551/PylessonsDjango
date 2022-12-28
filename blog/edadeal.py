@@ -55,6 +55,7 @@ class ED:
     def search(self):
         order_columns = ['count','good', 'name']
         data_frame = pd.DataFrame()
+
         for good in self.excel_data_df.name:
             count = 0
             for good_discount in self.df_res.name:
@@ -84,6 +85,9 @@ class ED:
         print(self.excel_data_df)
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
+        if self.df_res.empty:
+            print(f'Магазин {self.shop} не предоставил скидки по данным товарам')
+            return -1
         for good in self.excel_data_df.name:
             count = 0
             for good_discount in self.df_res.name:
@@ -110,4 +114,4 @@ class ED:
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
                 startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop)
         print(f"Данные по {self.shop} выгружены в базу")
-        return data
+        return 0
