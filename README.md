@@ -10,6 +10,7 @@
 
 ```
 ```
+#### Шаблон сайта взят с https://startbootstrap.com/theme/clean-blog
 #### Диаграмма прецидентов системы представлена на рисунке
 ![Alt-текст](https://github.com/Pav9551/PylessonsDjango/blob/master/uses_case.png "use case")
 ## Оглавление
