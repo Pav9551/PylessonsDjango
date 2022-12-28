@@ -11,7 +11,7 @@
 ```
 ```
 #### Диаграмма прецидентов системы представлена на рисунке
-![Alt-текст](https://github.com/Pav9551/iot_apartments/blob/main/uses_case.png "use case")
+![Alt-текст](https://github.com/Pav9551/PylessonsDjango/blob/master/uses_case.png "use case")
 ## Оглавление
 
 1. [Требования к операционной системе](#Требования-к-операционной-системе)
