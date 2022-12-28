@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from .models import Good
 # Create your views here.
 def main_view(request):
-    posts = Good.objects.all()
-    return render(request, 'blogapp/index.html')
+    good = Good.objects.all()
+    return render(request, 'blogapp/index.html', context={'posts': good})
+def post(request, id):
+    post = get_object_or_404(Good, id=id)
+    return render(request, 'blogapp/post.html', context={'post': post})
