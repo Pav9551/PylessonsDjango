@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Главная
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+        {% for item in goods %}
+        <div class="post-preview">
+            <a href="">
+                <h2 class="post-title">
+                    {{ item.name }}
+                </h2>
+            </a>
+        </div>
+        <hr>
+        {% endfor %}
+        <!-- Pager -->
+        <div class="clearfix">
+            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
