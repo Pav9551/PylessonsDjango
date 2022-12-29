@@ -7,4 +7,5 @@ urlpatterns = [
     path('merch/<int:id>/', views.post, name='merch'),
     path('goods', views.goods, name='goods'),
     path('send', views.send_merch, name='send'),
+    path('request', views.request_merch, name='request'),
 ]
