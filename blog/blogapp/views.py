@@ -1,9 +1,59 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good
+from .models import Good, Merchandise
+from .forms import ContactForm,RequestForm
+from django.core.mail import send_mail
+from django.urls import reverse
+from edadeal import ED
 # Create your views here.
 def main_view(request):
-    good = Good.objects.all()
-    return render(request, 'blogapp/index.html', context={'posts': good})
+    merch = Merchandise.objects.all()
+    return render(request, 'blogapp/index.html', context={'merch': merch})
 def post(request, id):
-    good = get_object_or_404(Good, id=id)
-    return render(request, 'blogapp/post.html', context={'post': good})
+    merch = get_object_or_404(Merchandise, id=id)
+    return render(request, 'blogapp/merch.html', context={'merch': merch})
+
+def goods(request):
+    goods = Good.objects.all()
+    return render(request, 'blogapp/goods.html', context={'goods': goods})
+def send_merch(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Получить данные из формы
+            name = form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            email = form.cleaned_data['email']
+            merch = Merchandise.objects.all()
+            list_result = [entry.name+' в '+entry.market_name for entry in merch]  # converts QuerySet into Python list
+            myString = '\n'.join(list_result)
+            send_mail(
+                'Contact message',
+                f'{name}, сообщаю, что {message}\nНе забудь купить:\n{myString}',
+                'from@example.com',
+                [email],
+                fail_silently=True,
+            )
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            return render(request, 'blogapp/send.html', context={'form': form})
+    else:
+        form = ContactForm()
+        return render(request, 'blogapp/send.html', context={'form': form})
+def request_merch(request):
+    if request.method == 'POST':
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            # Получить данные из формы
+            markets = form.cleaned_data['favorite_markets']
+            Merchandise.objects.all().delete()
+            for market in markets:
+                edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
+                edmarket.load_goods_from_base()
+                edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+                edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            return render(request, 'blogapp/request.html', context={'form': form})
+    else:
+        form = RequestForm()
+        return render(request, 'blogapp/request.html', context={'form': form})
