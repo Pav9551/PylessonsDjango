@@ -11,10 +11,10 @@ def main_view(request):
 def post(request, id):
     merch = get_object_or_404(Merchandise, id=id)
     return render(request, 'blogapp/merch.html', context={'merch': merch})
+
 def goods(request):
     goods = Good.objects.all()
     return render(request, 'blogapp/goods.html', context={'goods': goods})
-
 def send_merch(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
