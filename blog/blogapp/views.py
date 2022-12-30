@@ -3,6 +3,7 @@ from .models import Good, Merchandise
 from .forms import ContactForm,RequestForm
 from django.core.mail import send_mail
 from django.urls import reverse
+from edadeal import ED
 # Create your views here.
 def main_view(request):
     merch = Merchandise.objects.all()
@@ -43,19 +44,13 @@ def request_merch(request):
         form = RequestForm(request.POST)
         if form.is_valid():
             # Получить данные из формы
-            name = form.cleaned_data['name']
-            message = form.cleaned_data['message']
-            email = form.cleaned_data['email']
-            merch = Merchandise.objects.all()
-            list_result = [entry.name+' в '+entry.market_name for entry in merch]  # converts QuerySet into Python list
-            myString = '\n'.join(list_result)
-            send_mail(
-                'Contact message',
-                f'{name}, сообщаю, что {message}\nНе забудь купить:\n{myString}',
-                'from@example.com',
-                [email],
-                fail_silently=True,
-            )
+            markets = form.cleaned_data['favorite_markets']
+            Merchandise.objects.all().delete()
+            for market in markets:
+                edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
+                edmarket.load_goods_from_base()
+                edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+                edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
             return HttpResponseRedirect(reverse('blog:index'))
         else:
             return render(request, 'blogapp/request.html', context={'form': form})
