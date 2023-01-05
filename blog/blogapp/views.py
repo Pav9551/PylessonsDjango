@@ -4,6 +4,7 @@ from .forms import ContactForm,RequestForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormView
 from edadeal import ED
 # Create your views here.
 """def main_view(request):
@@ -37,24 +38,6 @@ def send_merch(request):
     else:
         form = ContactForm()
         return render(request, 'blogapp/send.html', context={'form': form})
-def request_merch(request):
-    if request.method == 'POST':
-        form = RequestForm(request.POST)
-        if form.is_valid():
-            # Получить данные из формы
-            markets = form.cleaned_data['favorite_markets']
-            Merchandise.objects.all().delete()
-            for market in markets:
-                edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
-                edmarket.load_goods_from_base()
-                edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
-                edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
-            return HttpResponseRedirect(reverse('blog:index'))
-        else:
-            return render(request, 'blogapp/request.html', context={'form': form})
-    else:
-        form = RequestForm()
-        return render(request, 'blogapp/request.html', context={'form': form})
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
@@ -63,6 +46,19 @@ class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
     context_object_name = 'merch'
+class MerchCreateView(FormView):
+    form_class = RequestForm
+    success_url = reverse_lazy('blog:index')
+    template_name = 'blogapp/request.html'
+    def form_valid(self, form):
+        markets = form.cleaned_data['favorite_markets']
+        Merchandise.objects.all().delete()
+        for market in markets:
+            edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
+            edmarket.load_goods_from_base()
+            edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+            edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+        return super().form_valid(form)
 class GoodListView(ListView):
     model = Good
     template_name = 'blogapp/good_list.html'

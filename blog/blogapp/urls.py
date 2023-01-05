@@ -8,8 +8,8 @@ urlpatterns = [
     #path('merch/<int:id>/', views.post, name='merch'),
     path('merch/<int:pk>/', views.MainDetailView.as_view(), name='merch'),
     path('send', views.send_merch, name='send'),
-    path('request', views.request_merch, name='request'),
-
+    #path('request', views.request_merch, name='request'),
+    path('request', views.MerchCreateView.as_view(), name='request'),
     path('good-list', views.GoodListView.as_view(), name='good_list'),
     path('good-ditail/<int:pk>/', views.GoodDetailView.as_view(), name='good_detail'),
     path('good-create', views.GoodCreateView.as_view(), name='good_create'),
