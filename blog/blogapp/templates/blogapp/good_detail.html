@@ -1,13 +1,14 @@
+
 {% extends "base.html" %}
 
 {% block title %}
-  Главная
-{% endblock %}
+
+{% endblock%}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-        {% for item in merch %}
+      {% for item in merch %}
         <div class="post-preview">
             <a href="{% url 'blog:merch' pk=item.pk %}">
                 <h2 class="post-title">
@@ -20,16 +21,13 @@
                     {{ item.market_name }}
                 </h3>
             </a>
-            <p class="post-meta">Posted by
-                <a href="#">Start Bootstrap</a>
-                on September 24, 2019</p>
+
         </div>
         <hr>
         {% endfor %}
-        <!-- Pager -->
-        <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
-        </div>
+        <h3 class="post-subtitle">
+        Записей в базе данных: {{len}}
+        </h3>
     </div>
 </div>
 {% endblock %}
