@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from .models import Good, Merchandise
 from .forms import ContactForm,RequestForm
 from django.core.mail import send_mail
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from edadeal import ED
 # Create your views here.
 def main_view(request):
@@ -57,3 +58,24 @@ def request_merch(request):
     else:
         form = RequestForm()
         return render(request, 'blogapp/request.html', context={'form': form})
+class GoodListView(ListView):
+    model = Good
+    template_name = 'blogapp/tag_list.html'
+class GoodDetailView(DetailView):
+    model = Good
+    template_name = 'blogapp/tag_detail.html'
+#создание поста
+class GoodCreateView(CreateView):
+    fields = '__all__'
+    model = Good
+    success_url = reverse_lazy('blog:good_list')
+    template_name = 'blogapp/good_create.html'
+class GoodUpdateView(UpdateView):
+    fields = '__all__'
+    model = Good
+    success_url = reverse_lazy('blog:good_list')
+    template_name = 'blogapp/good_create.html'
+class GoodDeleteView(DeleteView):
+    model = Good
+    success_url = reverse_lazy('blog:good_list')
+    template_name = 'blogapp/good_delete_confirm.html'
