@@ -60,10 +60,10 @@ def request_merch(request):
         return render(request, 'blogapp/request.html', context={'form': form})
 class GoodListView(ListView):
     model = Good
-    template_name = 'blogapp/tag_list.html'
+    template_name = 'blogapp/good_list.html'
 class GoodDetailView(DetailView):
     model = Good
-    template_name = 'blogapp/tag_detail.html'
+    template_name = 'blogapp/good_detail.html'
 #создание поста
 class GoodCreateView(CreateView):
     fields = '__all__'
