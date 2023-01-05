@@ -1,4 +1,4 @@
-# Домашнее задание по Django (python lesson 20)
+# Домашнее задание по Django (python lesson 21)
 
 ## Web-сервис демонстрирует работу ORM Django framework.
 #### Сервис парсит сайт https://edadeal.ru/ и записывает данные по скидкам в базу данных
@@ -74,6 +74,11 @@ python manage.py runserver
  - перейти по адресу и посмотреть данные Merchandise через админку:
 ```curl 
 http://127.0.0.1:8000/admin/
+```
+
+если порт забился:
+```curl 
+sudo fuser -k 8000/tcp
 ```
 
 

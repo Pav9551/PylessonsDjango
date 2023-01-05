@@ -132,3 +132,5 @@ STATICFILES_DIRS = [path.join(BASE_DIR,'static')]
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = path.join(BASE_DIR, 'temp/emailfolder')
