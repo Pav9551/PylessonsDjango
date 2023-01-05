@@ -50,6 +50,16 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     def __str__(self):
         return self.name
+class TimeStamp(models.Model):
+    """
+    Abstract - для нее не создаются новые таблицы
+    данные хранятся в каждом наследнике
+    """
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+    class Meta:
+        abstract = True
+
 class Good(models.Model):
     name = models.CharField(max_length=32, unique=True)
     def __str__(self):
@@ -60,7 +70,7 @@ class Shop(models.Model):
     name = models.CharField(max_length= 32, unique=True)
     def __str__(self):
         return self.name
-class Merchandise(models.Model):
+class Merchandise(TimeStamp):
     good = models.CharField(max_length= 32)
     name = models.TextField()
     imageUrl = models.URLField()
@@ -68,8 +78,6 @@ class Merchandise(models.Model):
     priceAfter = models.FloatField()
     amount = models.FloatField()
     discount = models.IntegerField()
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
     market_name = models.CharField(max_length= 32)
     # Связь с категорией
     # один ко многим

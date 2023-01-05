@@ -7,37 +7,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views.generic.edit import FormView
 from edadeal import ED
 # Create your views here.
-"""def main_view(request):
-    merch = Merchandise.objects.all()
-    return render(request, 'blogapp/index.html', context={'merch': merch})
-
-def post(request, id):
-    merch = get_object_or_404(Merchandise, id=id)
-    return render(request, 'blogapp/merch.html', context={'merch': merch})"""
-def send_merch(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            # Получить данные из формы
-            name = form.cleaned_data['name']
-            message = form.cleaned_data['message']
-            email = form.cleaned_data['email']
-            merch = Merchandise.objects.all()
-            list_result = [entry.name+' в '+entry.market_name for entry in merch]  # converts QuerySet into Python list
-            myString = '\n'.join(list_result)
-            send_mail(
-                'Contact message',
-                f'{name}, сообщаю, что {message}\nНе забудь купить:\n{myString}',
-                'from@example.com',
-                [email],
-                fail_silently=True,
-            )
-            return HttpResponseRedirect(reverse('blog:index'))
-        else:
-            return render(request, 'blogapp/send.html', context={'form': form})
-    else:
-        form = ContactForm()
-        return render(request, 'blogapp/send.html', context={'form': form})
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
@@ -46,7 +15,7 @@ class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
     context_object_name = 'merch'
-class MerchCreateView(FormView):
+class MerchFormView(FormView):
     form_class = RequestForm
     success_url = reverse_lazy('blog:index')
     template_name = 'blogapp/request.html'
@@ -58,6 +27,26 @@ class MerchCreateView(FormView):
             edmarket.load_goods_from_base()
             edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
             edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+        return super().form_valid(form)
+class SendFormView(FormView):
+    form_class = ContactForm
+    success_url = reverse_lazy('blog:index')
+    template_name = 'blogapp/send.html'
+    def form_valid(self, form):
+        # Получить данные из формы
+        name = form.cleaned_data['name']
+        message = form.cleaned_data['message']
+        email = form.cleaned_data['email']
+        merch = Merchandise.objects.all()
+        list_result = [entry.name + ' в ' + entry.market_name for entry in merch]  # converts QuerySet into Python list
+        myString = '\n'.join(list_result)
+        send_mail(
+            'Contact message',
+            f'{name}, сообщаю, что {message}\nНе забудь купить:\n{myString}',
+            'from@example.com',
+            [email],
+            fail_silently=True,
+        )
         return super().form_valid(form)
 class GoodListView(ListView):
     model = Good
