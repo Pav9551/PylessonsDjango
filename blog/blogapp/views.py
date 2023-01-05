@@ -61,9 +61,45 @@ def request_merch(request):
 class GoodListView(ListView):
     model = Good
     template_name = 'blogapp/good_list.html'
+
 class GoodDetailView(DetailView):
     model = Good
     template_name = 'blogapp/good_detail.html'
+    context_object_name = 'merch'
+
+    def get(self, request, *args, **kwargs):
+        """
+        Метод обработки get запроса
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self.good_id = kwargs['pk']
+        return super().get(request, *args, **kwargs)
+    def get_object(self, queryset=None):
+        """
+        Получение этого объекта
+        :param queryset:
+        :return:
+        """
+        good = get_object_or_404(Good, pk=self.good_id)
+        merch = Merchandise.objects.filter(good = good)
+        self.len_merch = len(merch)
+        return merch
+    def get_context_data(self, *args, **kwargs):
+        """
+        Отвечает за передачу параметров в контекст
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['len'] = self.len_merch
+        return context
+
+
+
 #создание поста
 class GoodCreateView(CreateView):
     fields = '__all__'

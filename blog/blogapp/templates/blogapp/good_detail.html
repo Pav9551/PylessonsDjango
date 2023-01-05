@@ -2,13 +2,32 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{post.name}}
+
 {% endblock%}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-       {{object.name}} - очень хорошая вещь, купи её.
+      {% for item in merch %}
+        <div class="post-preview">
+            <a href="{% url 'blog:merch' id=item.id %}">
+                <h2 class="post-title">
+                    {{ item.good }}
+                </h2>
+                <h3 class="post-subtitle">
+                    {{ item.name }}
+                </h3>
+                <h3 class="post-subtitle">
+                    {{ item.market_name }}
+                </h3>
+            </a>
+
+        </div>
+        <hr>
+        {% endfor %}
+        <h3 class="post-subtitle">
+        Записей в базе данных: {{len}}
+        </h3>
     </div>
 </div>
 {% endblock %}
