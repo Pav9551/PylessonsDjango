@@ -6,16 +6,13 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from edadeal import ED
 # Create your views here.
-def main_view(request):
+"""def main_view(request):
     merch = Merchandise.objects.all()
     return render(request, 'blogapp/index.html', context={'merch': merch})
+
 def post(request, id):
     merch = get_object_or_404(Merchandise, id=id)
-    return render(request, 'blogapp/merch.html', context={'merch': merch})
-
-def goods(request):
-    goods = Good.objects.all()
-    return render(request, 'blogapp/goods.html', context={'goods': goods})
+    return render(request, 'blogapp/merch.html', context={'merch': merch})"""
 def send_merch(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -58,6 +55,14 @@ def request_merch(request):
     else:
         form = RequestForm()
         return render(request, 'blogapp/request.html', context={'form': form})
+class MainListView(ListView):
+    model = Merchandise
+    template_name = 'blogapp/index.html'
+    context_object_name = 'merch'
+class MainDetailView(DetailView):
+    model = Merchandise
+    template_name = 'blogapp/merch.html'
+    context_object_name = 'merch'
 class GoodListView(ListView):
     model = Good
     template_name = 'blogapp/good_list.html'
@@ -97,9 +102,6 @@ class GoodDetailView(DetailView):
         context = super().get_context_data(*args, **kwargs)
         context['len'] = self.len_merch
         return context
-
-
-
 #создание поста
 class GoodCreateView(CreateView):
     fields = '__all__'
