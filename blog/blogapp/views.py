@@ -6,11 +6,17 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
 from edadeal import ED
+from usersapp.models import BlogUser
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
     context_object_name = 'merch'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        return Merchandise.objects.filter(user = user[0])
 class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
@@ -20,10 +26,14 @@ class MerchFormView(FormView):
     success_url = reverse_lazy('blog:index')
     template_name = 'blogapp/request.html'
     def form_valid(self, form):
+        superuser = BlogUser.objects.filter(is_superuser=True)
+        user = superuser[0]
+        #form.instance.user = self.request.user
+        user = BlogUser.objects.filter(username = self.request.user)
         markets = form.cleaned_data['favorite_markets']
-        Merchandise.objects.all().delete()
+        Merchandise.objects.filter(user = self.request.user).delete()
         for market in markets:
-            edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
+            edmarket = ED(CITY="moskva", SHOP=market, user = user[0])  # создаем экземпляр класса
             edmarket.load_goods_from_base()
             edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
             edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу

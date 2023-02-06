@@ -30,10 +30,12 @@ class ED:
     city = "moskva"
     shop = "lenta-super"
     GOODS = 'goods.xlsx'
-    def __init__(self, CITY = city, SHOP = shop):
+    superuser = BlogUser.objects.filter(is_superuser=True)
+    def __init__(self, CITY = city, SHOP = shop, user = superuser[0]):
         self.city = CITY
         self.shop = SHOP
         self.excel_data_df = pd.DataFrame()
+        self.user = user
     def load_xlsx(self,search_goods=GOODS):
         self.search_goods = search_goods
         print(search_goods)
@@ -76,9 +78,8 @@ class ED:
         print(f"Данные выгружены в файл {self.shop}.xlsx")
         return data
     def save_goods_to_base(self):
-        superuser = BlogUser.objects.filter(is_superuser=True)
         for item in self.excel_data_df.name:
-            good, created = Good.objects.get_or_create(name=item, user = superuser[0])
+            good, created = Good.objects.get_or_create(name=item, user = self.user)
     def load_goods_from_base(self):
         goods = Good.objects.all()
         list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
@@ -87,7 +88,6 @@ class ED:
         print(self.excel_data_df)
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
-        superuser = BlogUser.objects.filter(is_superuser=True)
         #users = superuser.values()
         #print(users[0]['username'])
         if self.df_res.empty:
@@ -121,6 +121,6 @@ class ED:
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
-                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop, user = superuser[0])
+                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop, user = self.user )
         print(f"Данные по {self.shop} выгружены в базу")
         return 0
