@@ -9,6 +9,7 @@ import offers_pb2#
 
 from django.core.management.base import BaseCommand
 from blogapp.models import Category, Tag, Post, Good, Merchandise, Shop
+from usersapp.models import BlogUser
 
 def parse_page(city = "moskva", shop = "lenta-super", page_num = 25):
     """
@@ -29,10 +30,12 @@ class ED:
     city = "moskva"
     shop = "lenta-super"
     GOODS = 'goods.xlsx'
-    def __init__(self, CITY = city, SHOP = shop):
+    superuser = BlogUser.objects.filter(is_superuser=True)
+    def __init__(self, CITY = city, SHOP = shop, user = superuser[0]):
         self.city = CITY
         self.shop = SHOP
         self.excel_data_df = pd.DataFrame()
+        self.user = user
     def load_xlsx(self,search_goods=GOODS):
         self.search_goods = search_goods
         print(search_goods)
@@ -76,15 +79,17 @@ class ED:
         return data
     def save_goods_to_base(self):
         for item in self.excel_data_df.name:
-            good, created = Good.objects.get_or_create(name=item)
+            good, created = Good.objects.get_or_create(name=item, user = self.user)
     def load_goods_from_base(self):
-        goods = Good.objects.all()
+        goods = Good.objects.filter(user = self.user)
         list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
         data = {'name': list_result}
         self.excel_data_df = pd.DataFrame(data, columns=['name'])
         print(self.excel_data_df)
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
+        #users = superuser.values()
+        #print(users[0]['username'])
         if self.df_res.empty:
             print(f'Магазин {self.shop} не предоставил скидки')
             return -2
@@ -116,6 +121,6 @@ class ED:
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
-                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop)
+                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop, user = self.user )
         print(f"Данные по {self.shop} выгружены в базу")
         return 0

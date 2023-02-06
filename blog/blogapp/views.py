@@ -1,16 +1,22 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from .models import Good, Merchandise
-from .forms import ContactForm,RequestForm
+from .forms import ContactForm,RequestForm, CreateForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
 from edadeal import ED
+from usersapp.models import BlogUser
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
     context_object_name = 'merch'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        return Merchandise.objects.filter(user = user[0])
 class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
@@ -20,10 +26,14 @@ class MerchFormView(FormView):
     success_url = reverse_lazy('blog:index')
     template_name = 'blogapp/request.html'
     def form_valid(self, form):
+        superuser = BlogUser.objects.filter(is_superuser=True)
+        user = superuser[0]
+        #form.instance.user = self.request.user
+        user = BlogUser.objects.filter(username = self.request.user)
         markets = form.cleaned_data['favorite_markets']
-        Merchandise.objects.all().delete()
+        Merchandise.objects.filter(user = self.request.user).delete()
         for market in markets:
-            edmarket = ED(CITY="moskva", SHOP=market)  # создаем экземпляр класса
+            edmarket = ED(CITY="moskva", SHOP=market, user = user[0])  # создаем экземпляр класса
             edmarket.load_goods_from_base()
             edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
             edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
@@ -51,8 +61,14 @@ class SendFormView(FormView):
 class GoodListView(ListView):
     model = Good
     template_name = 'blogapp/good_list.html'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        return Good.objects.filter(user = user[0])
 
 class GoodDetailView(DetailView):
+
     model = Good
     template_name = 'blogapp/good_detail.html'
     context_object_name = 'merch'
@@ -89,10 +105,21 @@ class GoodDetailView(DetailView):
         return context
 #создание поста
 class GoodCreateView(CreateView):
-    fields = '__all__'
+    #form_class = CreateForm
+    fields = ('name',)
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_create.html'
+    #exclude = ('user',)
+    def form_valid(self, form):
+        """
+        Метод срабатывает после того как форма валидна
+        :param form:
+        :return:
+        """
+        #self.request.user - текущий пользователь
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 class GoodUpdateView(UpdateView):
     fields = '__all__'
     model = Good
