@@ -81,7 +81,7 @@ class ED:
         for item in self.excel_data_df.name:
             good, created = Good.objects.get_or_create(name=item, user = self.user)
     def load_goods_from_base(self):
-        goods = Good.objects.all()
+        goods = Good.objects.filter(user = self.user)
         list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
         data = {'name': list_result}
         self.excel_data_df = pd.DataFrame(data, columns=['name'])

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from .models import Good, Merchandise
-from .forms import ContactForm,RequestForm
+from .forms import ContactForm,RequestForm, CreateForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -61,8 +61,14 @@ class SendFormView(FormView):
 class GoodListView(ListView):
     model = Good
     template_name = 'blogapp/good_list.html'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        return Good.objects.filter(user = user[0])
 
 class GoodDetailView(DetailView):
+
     model = Good
     template_name = 'blogapp/good_detail.html'
     context_object_name = 'merch'
@@ -99,10 +105,21 @@ class GoodDetailView(DetailView):
         return context
 #создание поста
 class GoodCreateView(CreateView):
+    #form_class = CreateForm
     fields = '__all__'
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_create.html'
+    #exclude = ('user',)
+    def form_valid(self, form):
+        """
+        Метод срабатывает после того как форма валидна
+        :param form:
+        :return:
+        """
+        #self.request.user - текущий пользователь
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 class GoodUpdateView(UpdateView):
     fields = '__all__'
     model = Good

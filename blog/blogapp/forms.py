@@ -1,4 +1,5 @@
 from django import forms
+from .models import Good
 MARKETS = [
     ('lenta-super', 'Лента супермаркет'),
     ('5ka', 'Пятерочка'),
@@ -16,5 +17,25 @@ class RequestForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(attrs={"checked": ""}),
         choices=MARKETS,
     )
+class CreateForm(forms.Form):
+    class Meta:
+        model = Good
+        #fields = '__all__'
+        # fields = ('name', 'category')
+        exclude = ('user',)
+
+'''class PostForm(forms.ModelForm):
+    name = forms.CharField(label='Название',
+                           widget=forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control'}))
+
+    # Чекбоксы
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
+                                          widget=forms.CheckboxSelectMultiple())
+
+    class Meta:
+        model = Post
+        fields = '__all__'
+        # fields = ('name', 'category')
+        #exclude = ('user',)'''
 
 

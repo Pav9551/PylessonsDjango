@@ -61,7 +61,7 @@ class TimeStamp(models.Model):
         abstract = True
 
 class Good(models.Model):
-    name = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=32, unique=False)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
