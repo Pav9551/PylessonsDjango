@@ -106,7 +106,7 @@ class GoodDetailView(DetailView):
 #создание поста
 class GoodCreateView(CreateView):
     #form_class = CreateForm
-    fields = '__all__'
+    fields = ('name',)
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_create.html'
