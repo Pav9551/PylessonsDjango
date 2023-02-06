@@ -76,6 +76,7 @@ class ED:
         print(f"Данные выгружены в файл {self.shop}.xlsx")
         return data
     def save_goods_to_base(self):
+        superuser = BlogUser.objects.filter(is_superuser=True)
         for item in self.excel_data_df.name:
             good, created = Good.objects.get_or_create(name=item)
     def load_goods_from_base(self):
@@ -86,9 +87,9 @@ class ED:
         print(self.excel_data_df)
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
-        superuser = BlogUser.objects.filter(is_superuser=True, username = 'pavel')
-        users = superuser.values()
-        print(users[0]['username'])
+        superuser = BlogUser.objects.filter(is_superuser=True)
+        #users = superuser.values()
+        #print(users[0]['username'])
         if self.df_res.empty:
             print(f'Магазин {self.shop} не предоставил скидки')
             return -2

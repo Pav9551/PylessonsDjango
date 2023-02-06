@@ -62,7 +62,7 @@ class TimeStamp(models.Model):
 
 class Good(models.Model):
     name = models.CharField(max_length=32, unique=True)
-    #user = models.ForeignKey(BlogUser, on_delete=models.CASCADE, null=True, blank=True)
+    #user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 #название магазина
