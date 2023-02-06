@@ -9,6 +9,7 @@ import offers_pb2#
 
 from django.core.management.base import BaseCommand
 from blogapp.models import Category, Tag, Post, Good, Merchandise, Shop
+from usersapp.models import BlogUser
 
 def parse_page(city = "moskva", shop = "lenta-super", page_num = 25):
     """
@@ -85,6 +86,9 @@ class ED:
         print(self.excel_data_df)
     def search_and_refrash(self):
         data_frame = pd.DataFrame()
+        superuser = BlogUser.objects.filter(is_superuser=True, username = 'pavel')
+        users = superuser.values()
+        print(users[0]['username'])
         if self.df_res.empty:
             print(f'Магазин {self.shop} не предоставил скидки')
             return -2
@@ -116,6 +120,6 @@ class ED:
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
-                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop)
+                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop, user = superuser[0])
         print(f"Данные по {self.shop} выгружены в базу")
         return 0

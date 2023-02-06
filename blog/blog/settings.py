@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogapp'# подключение нашего приложения
+    'blogapp',# подключение нашего приложения
+    'usersapp'# подключение нашей админки
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,6 @@ STATICFILES_DIRS = [path.join(BASE_DIR,'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = path.join(BASE_DIR, 'temp/emailfolder')
+
+# Переназначение модели пользователя
+AUTH_USER_MODEL = 'usersapp.BlogUser'
