@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from blogapp.models import Merchandise
+from blogapp.models import Merchandise, Good
 from usersapp.models import BlogUser
 from edadeal import ED
 from pathlib import Path
@@ -12,6 +12,8 @@ class Command(BaseCommand):
         superuser = BlogUser.objects.filter(is_superuser=True, username = 'pavel')
         users = superuser.values()
         print(users[0]['username'])
+
+        good, created = Good.objects.get_or_create(name='товар',user = superuser[0])
         #user = BlogUser.objects.create_user('john', 'lennon@thebeatles1.com', 'johnpassword')
         #user.save()
         #print(user.name)

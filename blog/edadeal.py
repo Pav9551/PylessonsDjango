@@ -78,7 +78,7 @@ class ED:
     def save_goods_to_base(self):
         superuser = BlogUser.objects.filter(is_superuser=True)
         for item in self.excel_data_df.name:
-            good, created = Good.objects.get_or_create(name=item)
+            good, created = Good.objects.get_or_create(name=item, user = superuser[0])
     def load_goods_from_base(self):
         goods = Good.objects.all()
         list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
