@@ -31,9 +31,11 @@ class MerchFormView(FormView):
         #form.instance.user = self.request.user
         user = BlogUser.objects.filter(username = self.request.user)
         markets = form.cleaned_data['favorite_markets']
+        city = form.cleaned_data['favorite_cities']
+        print(form.cleaned_data)
         Merchandise.objects.filter(user = self.request.user).delete()
         for market in markets:
-            edmarket = ED(CITY="moskva", SHOP=market, user = user[0])  # создаем экземпляр класса
+            edmarket = ED(CITY=city, SHOP=market, user = user[0])  # создаем экземпляр класса
             edmarket.load_goods_from_base()
             edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
             edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
