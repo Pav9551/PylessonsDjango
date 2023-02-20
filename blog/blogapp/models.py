@@ -1,5 +1,6 @@
 from django.db import models
 from usersapp.models import BlogUser
+from edadeal_new import ED
 # Create your models here.
 class Category(models.Model):
     #Id не надо, он уже сам появиться
@@ -87,6 +88,22 @@ class Merchandise(TimeStamp):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return ("{0:2d}% скидка в магазине {1} на товар: {2}.".format(self.discount, self.market_name, self.name))
+    def fill_base(self, superuser, city, shop, xlsx):
+        user = superuser[0]
+        lenta = ED(CITY="moskva", SHOP="lenta-super")  # создаем экземпляр класса
+        lenta.load_xlsx(xlsx)  # загружаем интересующие нас товары из файла
+        #lenta.save_goods_to_base()  # сохраняем список интересующих нас товаров в базу через ORM
+        lenta.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+        #lenta.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+
+        print(user)
+        print(city)
+        print(shop)
+
+
+
+
+
 
 
 

@@ -7,7 +7,7 @@ MARKETS = [
 ]
 CITIES = [
     ('moskva', 'Москва'),
-    ('novosibirsk', 'Новосибирск'),
+    #('novosibirsk', 'Новосибирск'),
     ('sankt-peterburg', 'Санкт-Петербург'),
     ('samara', 'Самара'),
     ('ekaterinburg', 'Екатеринбург'),
