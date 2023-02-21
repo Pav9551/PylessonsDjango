@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from blogapp.models import Merchandise
 from usersapp.models import BlogUser
-#from edadeal import ED
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,13 +10,15 @@ goods_path = (BASE_DIR / 'goods.xlsx').__str__()
 class Command(BaseCommand):
     def handle(self, *args, **options):
         city = "moskva"
-        shop = "lenta-super"
+        shop1 = "lenta-super"
+        shop2 = "5ka"
+        shop3 = "perekrestok"
         GOODS = 'goods.xlsx'
-        #Merchandise.objects.all().delete()
         user = BlogUser.objects.filter(is_superuser=True)
-        Merchandise().fill_base(user, city, shop, GOODS)
-
-
+        Merchandise.objects.filter(user=user[0]).delete()
+        Merchandise().fill_base_from_file(user, city, shop1, GOODS)
+        Merchandise().fill_base_from_file(user, city, shop2, GOODS)
+        Merchandise().fill_base_from_file(user, city, shop3, GOODS)
 
 
 
