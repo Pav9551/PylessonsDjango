@@ -3,6 +3,8 @@ from usersapp.models import BlogUser
 from edadeal_new import ED
 import re
 import pandas as pd
+import os
+from pathlib import Path
 # Create your models here.
 class Category(models.Model):
     #Id не надо, он уже сам появиться
@@ -68,6 +70,11 @@ class Good(models.Model):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+    def has_xlsx(self):
+        # Build paths inside the project like this: BASE_DIR / 'subdir'.
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        xlx_file = BASE_DIR / 'goods.xlsx'
+        return os.path.isfile(xlx_file)
 #название магазина
 class Shop(models.Model):
     #Id не надо, он уже сам появиться
@@ -133,6 +140,7 @@ class Merchandise(TimeStamp):
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
                 startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
         print(f"Данные по {lenta.shop} выгружены в базу")
+        return 0
     def fill_base(self, simple_user, city, shop):
         user = simple_user[0]
         lenta = ED(CITY=city, SHOP=shop)  # создаем экземпляр класса
@@ -181,6 +189,8 @@ class Merchandise(TimeStamp):
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
                 startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
         print(f"Данные по {lenta.shop} выгружены в базу")
+        return 0
+
 
 
 
