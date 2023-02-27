@@ -5,6 +5,14 @@ MARKETS = [
     ('5ka', 'Пятерочка'),
     ('perekrestok', 'Перекресток'),
 ]
+CITIES = [
+    ('moskva', 'Москва'),
+    #('novosibirsk', 'Новосибирск'),
+    ('sankt-peterburg', 'Санкт-Петербург'),
+    ('samara', 'Самара'),
+    ('ekaterinburg', 'Екатеринбург'),
+]
+
 class ContactForm(forms.Form):
     name = forms.CharField(label='Название')
     message = forms.CharField(label='Сообщение')
@@ -17,6 +25,17 @@ class RequestForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(attrs={"checked": ""}),
         choices=MARKETS,
     )
+    favorite_cities = forms.ChoiceField(
+        label='Город:',
+        required=False,
+        widget=forms.RadioSelect(),
+        choices=CITIES,
+        initial='moskva'
+    )
+
+
+
+
 class CreateForm(forms.Form):
     class Meta:
         model = Good

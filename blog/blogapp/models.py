@@ -1,5 +1,10 @@
 from django.db import models
 from usersapp.models import BlogUser
+from edadeal_new import ED
+import re
+import pandas as pd
+import os
+from pathlib import Path
 # Create your models here.
 class Category(models.Model):
     #Id не надо, он уже сам появиться
@@ -65,6 +70,11 @@ class Good(models.Model):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+    def has_xlsx(self):
+        # Build paths inside the project like this: BASE_DIR / 'subdir'.
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        xlx_file = BASE_DIR / 'goods.xlsx'
+        return os.path.isfile(xlx_file)
 #название магазина
 class Shop(models.Model):
     #Id не надо, он уже сам появиться
@@ -87,6 +97,105 @@ class Merchandise(TimeStamp):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     def __str__(self):
         return ("{0:2d}% скидка в магазине {1} на товар: {2}.".format(self.discount, self.market_name, self.name))
+    def fill_base_from_file(self, superuser, city, shop, xlsx):
+        user = superuser[0]
+        lenta = ED(CITY=city, SHOP=shop)  # создаем экземпляр класса
+        lenta.load_xlsx(xlsx)  # загружаем интересующие нас товары из файла
+        # сохраняем список интересующих нас товаров в базу через ORM
+        for item in lenta.excel_data_df.name:
+            good, created = Good.objects.get_or_create(name=item, user = user)
+        lenta.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+        data_frame = pd.DataFrame()
+        # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+        if lenta.df_res.empty:
+            print(f'Магазин {lenta.shop} не предоставил скидки')
+            return -2
+        for good in lenta.excel_data_df.name:
+            count = 0
+            for good_discount in lenta.df_res.name:
+                result = re.match(good, good_discount)
+                if ((result is None) == False):
+                    df = pd.DataFrame({
+                    'count': [count],
+                    'good': [good],
+                    'name': [good_discount]})
+                    data_frame = pd.concat([data_frame, df])
+                count = count + 1
+        if data_frame.empty:
+            print(f'Магазин {lenta.shop} не предоставил скидки на данные товары')
+            return -1
+        data = data_frame.merge(lenta.df_res, on=['name'], how='left')
+
+        data = data.drop_duplicates(subset=['name'])
+        #data.to_excel(f"{self.shop}.xlsx", index=False)
+        data = data.reset_index()
+        #data_frame.to_excel("output2.xlsx", index=False)
+        shop, created = Shop.objects.get_or_create(name=lenta.shop)
+        for index, row in data.iterrows():
+            print(row['good'],"-", row['name'])
+            if (pd.isna(row['amount']) == True):
+                row['amount'] = 0.0
+            merch, created = Merchandise.objects.get_or_create(
+                name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
+                priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
+                startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
+        print(f"Данные по {lenta.shop} выгружены в базу")
+        return 0
+    def fill_base(self, simple_user, city, shop):
+        user = simple_user[0]
+        lenta = ED(CITY=city, SHOP=shop)  # создаем экземпляр класса
+
+        goods = Good.objects.filter(user = user)
+        list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
+        data = {'name': list_result}
+        lenta.excel_data_df = pd.DataFrame(data, columns=['name'])
+        #lenta.load_xlsx(xlsx)  # загружаем интересующие нас товары из файла
+        # сохраняем список интересующих нас товаров в базу через ORM
+        for item in lenta.excel_data_df.name:
+            good, created = Good.objects.get_or_create(name=item, user = user)
+        lenta.get_df_discount()  # запрашиваем список товаров со скидками с сайта
+        data_frame = pd.DataFrame()
+        # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+        if lenta.df_res.empty:
+            print(f'Магазин {lenta.shop} не предоставил скидки')
+            return -2
+        for good in lenta.excel_data_df.name:
+            count = 0
+            for good_discount in lenta.df_res.name:
+                result = re.match(good, good_discount)
+                if ((result is None) == False):
+                    df = pd.DataFrame({
+                    'count': [count],
+                    'good': [good],
+                    'name': [good_discount]})
+                    data_frame = pd.concat([data_frame, df])
+                count = count + 1
+        if data_frame.empty:
+            print(f'Магазин {lenta.shop} не предоставил скидки на данные товары')
+            return -1
+        data = data_frame.merge(lenta.df_res, on=['name'], how='left')
+
+        data = data.drop_duplicates(subset=['name'])
+        #data.to_excel(f"{self.shop}.xlsx", index=False)
+        data = data.reset_index()
+        #data_frame.to_excel("output2.xlsx", index=False)
+        shop, created = Shop.objects.get_or_create(name=lenta.shop)
+        for index, row in data.iterrows():
+            print(row['good'],"-", row['name'])
+            if (pd.isna(row['amount']) == True):
+                row['amount'] = 0.0
+            merch, created = Merchandise.objects.get_or_create(
+                name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
+                priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
+                startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
+        print(f"Данные по {lenta.shop} выгружены в базу")
+        return 0
+
+
+
+
+
+
 
 
 

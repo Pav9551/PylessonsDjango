@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
-from edadeal import ED
+#from edadeal import ED
 from usersapp.models import BlogUser
 # Create your views here.
 class MainListView(ListView):
@@ -26,17 +26,17 @@ class MerchFormView(FormView):
     success_url = reverse_lazy('blog:index')
     template_name = 'blogapp/request.html'
     def form_valid(self, form):
-        superuser = BlogUser.objects.filter(is_superuser=True)
-        user = superuser[0]
+        #superuser = BlogUser.objects.filter(is_superuser=True)
+        #user = superuser[0]
         #form.instance.user = self.request.user
         user = BlogUser.objects.filter(username = self.request.user)
         markets = form.cleaned_data['favorite_markets']
+        city = form.cleaned_data['favorite_cities']
+        print(form.cleaned_data)
         Merchandise.objects.filter(user = self.request.user).delete()
         for market in markets:
-            edmarket = ED(CITY="moskva", SHOP=market, user = user[0])  # создаем экземпляр класса
-            edmarket.load_goods_from_base()
-            edmarket.get_df_discount()  # запрашиваем список товаров со скидками с сайта
-            edmarket.search_and_refrash()  # сопоставляем искомые товары с перечнем скидок и сохраняем в базу
+            Merchandise().fill_base(user, city, market)
+            pass
         return super().form_valid(form)
 class SendFormView(FormView):
     form_class = ContactForm
