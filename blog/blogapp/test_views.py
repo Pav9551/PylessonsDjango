@@ -12,8 +12,18 @@ class ViewsTest(TestCase):
         self.fake = Faker()
 
     def test_statuses(self):
-        response = self.client.get('/')
+        client = Client()
+        response = client.get('/request')
         self.assertEqual(response.status_code, 200)
-        # Что мы можем проверить
-        response = self.client.get('/contact/')
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/send',
+                                    {'name': self.fake.name(), 'message': self.fake.text(),
+                                     'email': self.fake.email()})
+        self.assertEqual(response.status_code, 302)
+        self.client.login(username='test_user', password='leo1234567')
+        response = self.client.get('/users/login')
+        self.assertEqual(response.status_code, 301)
+
+
+
+
+
