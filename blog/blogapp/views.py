@@ -17,6 +17,16 @@ class MainListView(ListView):
         if len(user) == 0:
             user = BlogUser.objects.filter(is_superuser = True)
         return Merchandise.objects.filter(user = user[0])
+    def get_context_data(self, *args, **kwargs):
+        """
+        Отвечает за передачу параметров в контекст
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['title'] = 'главная страница'
+        return context
 class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
