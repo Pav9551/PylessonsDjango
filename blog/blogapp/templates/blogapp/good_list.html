@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load str_extensions %}
 {% block title %}
 Список тегов
 {% endblock %}
@@ -21,7 +21,13 @@
     <li>
         <h2 class="post-title">
         <a href   ="{% url 'blog:good_detail' pk=item.pk %}">
-        {{item.name}}
+         {% if item.good_count > 0 %}
+            {{item.name}}
+         {% else %}
+            {{item.name | del_word | safe}}
+         {% endif %}
+
+
         </a>
          </h2>
         /

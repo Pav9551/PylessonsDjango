@@ -7,16 +7,34 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views.generic.edit import FormView
 #from edadeal import ED
 from usersapp.models import BlogUser
+from django.core.paginator import Paginator
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
     context_object_name = 'merch'
+    paginate_by = 10 # Number of items to show per page
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
             user = BlogUser.objects.filter(is_superuser = True)
         return Merchandise.objects.filter(user = user[0])
+    def get_context_data(self, *args, **kwargs):
+        """
+        Отвечает за передачу параметров в контекст
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['title'] = 'главная страница'
+
+        paginator = Paginator(self.object_list, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+
+        return context
 class MainDetailView(DetailView):
     model = Merchandise
     template_name = 'blogapp/merch.html'
@@ -63,9 +81,8 @@ class GoodListView(ListView):
     template_name = 'blogapp/good_list.html'
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
-        if len(user) == 0:
-            user = BlogUser.objects.filter(is_superuser = True)
-        return Good.objects.filter(user = user[0])
+        queryset = Good.active_objects.get_queryset_user(user[0])
+        return queryset
 
 class GoodDetailView(DetailView):
 
@@ -121,7 +138,8 @@ class GoodCreateView(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 class GoodUpdateView(UpdateView):
-    fields = '__all__'
+    #fields = '__all__'
+    fields = ('name',)
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_create.html'
