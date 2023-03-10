@@ -73,9 +73,8 @@ class GoodListView(ListView):
     template_name = 'blogapp/good_list.html'
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
-        if len(user) == 0:
-            user = BlogUser.objects.filter(is_superuser = True)
-        return Good.objects.filter(user = user[0])
+        queryset = Good.active_objects.get_queryset_user(user[0])
+        return queryset
 
 class GoodDetailView(DetailView):
 
@@ -131,7 +130,8 @@ class GoodCreateView(CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 class GoodUpdateView(UpdateView):
-    fields = '__all__'
+    #fields = '__all__'
+    fields = ('name',)
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_create.html'

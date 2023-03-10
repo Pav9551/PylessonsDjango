@@ -42,12 +42,19 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 class ActiveManager(models.Manager):
-    def get_queryset(self):
-        all_objects = super().get_queryset()
-        list_of_goods = Merchandise.objects.distinct()
-        list_of_goods = Merchandise.objects.values_list('good').distinct().count()
-        print(list_of_goods)
-        return all_objects
+    def get_queryset_user(self, username=None):
+        queryset = super().get_queryset()
+        if username:
+            list_of_Merch = Merchandise.objects.filter(user = username).values_list('good').distinct()
+            list_result = [entry[0] for entry in list_of_Merch]  # converts QuerySet into Python list
+            query = Good.objects.filter(user=username)
+            query.update(good_count=0)
+            query = Good.objects.filter(name__in=list_result, user = username)
+            query.update(good_count = 1)
+            queryset = queryset.filter(user = username)
+        return queryset
+
+
 class IsActiveMixin(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
@@ -150,6 +157,8 @@ class Merchandise(TimeStamp):
             print(row['good'],"-", row['name'])
             if (pd.isna(row['amount']) == True):
                 row['amount'] = 0.0
+            if (pd.isna(row['discount']) == True):
+                row['discount'] = 0.0
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
@@ -199,6 +208,8 @@ class Merchandise(TimeStamp):
             print(row['good'],"-", row['name'])
             if (pd.isna(row['amount']) == True):
                 row['amount'] = 0.0
+            if (pd.isna(row['discount']) == True):
+                row['discount'] = 0.0
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
