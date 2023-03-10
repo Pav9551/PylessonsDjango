@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blogapp',# подключение нашего приложения
-    'usersapp'# подключение нашей админки
+    'usersapp',# подключение нашей админки
+    'django_extensions'
+
 ]
 
 MIDDLEWARE = [

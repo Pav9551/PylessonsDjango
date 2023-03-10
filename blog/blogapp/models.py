@@ -41,7 +41,18 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
+class ActiveManager(models.Manager):
+    def get_queryset(self):
+        all_objects = super().get_queryset()
+        list_of_goods = Merchandise.objects.distinct()
+        list_of_goods = Merchandise.objects.values_list('good').distinct().count()
+        print(list_of_goods)
+        return all_objects
+class IsActiveMixin(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveManager()
+    class Meta:
+        abstract = True
 class Post(models.Model):
     name = models.CharField(max_length= 32, unique= True)
     text = models.TextField()
@@ -66,8 +77,11 @@ class TimeStamp(models.Model):
         abstract = True
 
 class Good(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveManager()
     name = models.CharField(max_length=32, unique=False)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+    good_count = models.IntegerField(default=0)
     def __str__(self):
         return self.name
     def has_xlsx(self):
@@ -75,6 +89,7 @@ class Good(models.Model):
         BASE_DIR = Path(__file__).resolve().parent.parent
         xlx_file = BASE_DIR / 'goods.xlsx'
         return os.path.isfile(xlx_file)
+
 #название магазина
 class Shop(models.Model):
     #Id не надо, он уже сам появиться
