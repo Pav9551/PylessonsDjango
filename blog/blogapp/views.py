@@ -7,11 +7,13 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views.generic.edit import FormView
 #from edadeal import ED
 from usersapp.models import BlogUser
+from django.core.paginator import Paginator
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
     context_object_name = 'merch'
+    paginate_by = 10 # Number of items to show per page
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
@@ -26,6 +28,12 @@ class MainListView(ListView):
         """
         context = super().get_context_data(*args, **kwargs)
         context['title'] = 'главная страница'
+
+        paginator = Paginator(self.object_list, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+
         return context
 class MainDetailView(DetailView):
     model = Merchandise

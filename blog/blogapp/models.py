@@ -53,8 +53,6 @@ class ActiveManager(models.Manager):
             query.update(good_count = 1)
             queryset = queryset.filter(user = username)
         return queryset
-
-
 class IsActiveMixin(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
