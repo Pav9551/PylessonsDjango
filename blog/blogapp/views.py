@@ -13,7 +13,7 @@ class MainListView(ListView):
     model = Merchandise
     template_name = 'blogapp/index.html'
     context_object_name = 'merch'
-    paginate_by = 10 # Number of items to show per page
+    paginate_by = 80 # Number of items to show per page
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
@@ -81,6 +81,8 @@ class GoodListView(ListView):
     template_name = 'blogapp/good_list.html'
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
         queryset = Good.active_objects.get_queryset_user(user[0])
         return queryset
 
