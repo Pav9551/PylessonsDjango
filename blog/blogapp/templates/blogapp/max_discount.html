@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load str_extensions %}
+{% block title %}
+Список тегов
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12 mx-auto">
+        {% with all_tags=merch %}
+        <table class="table">
+            <tbody>
+             {% for tag in all_tags %}
+                <tr>
+                    <td>{{tag.discount}} % скидка</td>
+                    <td><img src="{{tag.imageUrl}}" width="200"></td>
+                    <td>{{tag.name}} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </div>
+
+
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
