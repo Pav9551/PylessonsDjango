@@ -149,3 +149,13 @@ class GoodDeleteView(DeleteView):
     model = Good
     success_url = reverse_lazy('blog:good_list')
     template_name = 'blogapp/good_delete_confirm.html'
+
+class DiscountDetailView(ListView):
+    model = Merchandise
+    template_name = 'blogapp/max_discount.html'
+    context_object_name = 'merch'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        return Merchandise.objects.filter(user = user[0])[:9]
