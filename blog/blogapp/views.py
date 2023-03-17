@@ -158,4 +158,4 @@ class DiscountDetailView(ListView):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
             user = BlogUser.objects.filter(is_superuser = True)
-        return Merchandise.objects.filter(user = user[0])[:9]
+        return Merchandise.objects.filter(user = user[0]).order_by('-discount')[:9]
