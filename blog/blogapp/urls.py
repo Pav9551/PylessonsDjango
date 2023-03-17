@@ -12,5 +12,5 @@ urlpatterns = [
     path('good-create', views.GoodCreateView.as_view(), name='good_create'),
     path('good-update/<int:pk>/', views.GoodUpdateView.as_view(), name='good_update'),
     path('good-delete/<int:pk>/', views.GoodDeleteView.as_view(), name='good_delete'),
-
+    path('max_discount', views.DiscountDetailView.as_view(), name='max_discount'),
 ]

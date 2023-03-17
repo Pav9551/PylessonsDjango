@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load str_extensions %}
+{% block title %}
+Список тегов
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 mx-auto">
+        {% with all_tags=max_disc %}
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td><img src="{{all_tags.0.imageUrl}}" width="200"></td>
+                    <td><img src="{{all_tags.1.imageUrl}}" width="200"></td>
+                    <td><img src="{{all_tags.2.imageUrl}}" width="200"></td>
+                    <td><img src="{{all_tags.3.imageUrl}}" width="200"></td>
+                    <td><img src="{{all_tags.4.imageUrl}}" width="200"></td>
+                    <td><img src="{{all_tags.5.imageUrl}}" width="200"></td>
+                </tr>
+            </tbody>
+        </div>
+        <table class="table">
+            <tbody>
+             {% for tag in all_tags %}
+                <tr>
+                    <td><p>{{tag.user}}, только для тебя:</p>
+                        <p>{{tag.discount}} % скидка в магазине {{tag.market_name}}</p>
+                        <p>({{tag.priceBefore}}р) {{tag.priceAfter}}р</p>
+                    </td>
+                    <td><img src="{{tag.imageUrl}}" width="200"></td>
+                    <td>{{tag.name}} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </div>
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

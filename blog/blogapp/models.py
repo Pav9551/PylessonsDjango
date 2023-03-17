@@ -5,6 +5,7 @@ import re
 import pandas as pd
 import os
 from pathlib import Path
+from django.utils.functional import cached_property
 # Create your models here.
 class Category(models.Model):
     #Id не надо, он уже сам появиться
@@ -53,6 +54,10 @@ class ActiveManager(models.Manager):
             query.update(good_count = 1)
             queryset = queryset.filter(user = username)
         return queryset
+    def get_queryset_max_discount(self):
+        queryset = super().get_queryset()
+        return queryset
+
 class IsActiveMixin(models.Model):
     objects = models.Manager()
     active_objects = ActiveManager()
@@ -214,6 +219,18 @@ class Merchandise(TimeStamp):
                 startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
         print(f"Данные по {lenta.shop} выгружены в базу")
         return 0
+
+    @cached_property
+    def get_max_discount_cached(self):
+        print('max_discount_cached')
+        max = Merchandise.objects.select_related('market', 'user').order_by('-discount')[:9]
+        #max = Merchandise.objects.order_by('-discount')[:9]
+        return max
+
+    def get_max_discount(self):
+        print('*******')
+        max = Merchandise.objects.order_by('-discount')[:9]
+        return max
 
 
 
