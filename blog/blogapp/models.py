@@ -5,6 +5,7 @@ import re
 import pandas as pd
 import os
 from pathlib import Path
+from django.utils.functional import cached_property
 # Create your models here.
 class Category(models.Model):
     #Id не надо, он уже сам появиться
@@ -218,6 +219,17 @@ class Merchandise(TimeStamp):
                 startDate = row['startDate'], endDate = row['endDate'], market_name = lenta.shop, market = shop, user = user)
         print(f"Данные по {lenta.shop} выгружены в базу")
         return 0
+
+    @cached_property
+    def get_max_discount_cached(self):
+        print('discount_cached')
+        max = Merchandise.objects.order_by('-discount')[:9]
+        return max
+
+    def get_max_discount(self):
+        print('*******')
+        max = Merchandise.objects.order_by('-discount')[:9]
+        return max
 
 
 

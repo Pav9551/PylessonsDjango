@@ -8,7 +8,7 @@ from django.views.generic.edit import FormView
 #from edadeal import ED
 from usersapp.models import BlogUser
 from django.core.paginator import Paginator
-from django.utils.functional import cached_property
+
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
@@ -155,10 +155,22 @@ class DiscountDetailView(ListView):
     model = Merchandise
     template_name = 'blogapp/max_discount.html'
     context_object_name = 'merch'
+    '''def get_queryset(self):
+        return Merchandise().get_max_discount()'''
+    def get_context_data(self, *args, **kwargs):
+        """
+        Отвечает за передачу параметров в контекст
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['title'] = 'страница'
+        # context['max_disc'] = Merchandise().get_max_discount()
+        max_disc = Merchandise().get_max_discount_cached
+        context['max_disc'] = max_disc
+        for item in max_disc:
+            print(item)
+        return context
 
-    @cached_property
-    def get_queryset(self):
-        user = BlogUser.objects.filter(username=self.request.user)
-        if len(user) == 0:
-            user = BlogUser.objects.filter(is_superuser = True)
-        return Merchandise.objects.filter(user = user[0]).order_by('-discount')[:9]
+
