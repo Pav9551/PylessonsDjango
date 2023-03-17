@@ -8,6 +8,7 @@ from django.views.generic.edit import FormView
 #from edadeal import ED
 from usersapp.models import BlogUser
 from django.core.paginator import Paginator
+from django.utils.functional import cached_property
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
@@ -154,6 +155,8 @@ class DiscountDetailView(ListView):
     model = Merchandise
     template_name = 'blogapp/max_discount.html'
     context_object_name = 'merch'
+
+    @cached_property
     def get_queryset(self):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
