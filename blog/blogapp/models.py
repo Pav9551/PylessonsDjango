@@ -222,8 +222,9 @@ class Merchandise(TimeStamp):
 
     @cached_property
     def get_max_discount_cached(self):
-        print('discount_cached')
-        max = Merchandise.objects.order_by('-discount')[:9]
+        print('max_discount_cached')
+        max = Merchandise.objects.select_related('market', 'user').order_by('-discount')[:9]
+        #max = Merchandise.objects.order_by('-discount')[:9]
         return max
 
     def get_max_discount(self):

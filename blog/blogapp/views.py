@@ -19,7 +19,8 @@ class MainListView(ListView):
         user = BlogUser.objects.filter(username=self.request.user)
         if len(user) == 0:
             user = BlogUser.objects.filter(is_superuser = True)
-        return Merchandise.objects.filter(user = user[0])
+        merch = Merchandise.objects.filter(user = user[0])
+        return merch
     def get_context_data(self, *args, **kwargs):
         """
         Отвечает за передачу параметров в контекст
@@ -155,8 +156,8 @@ class DiscountDetailView(ListView):
     model = Merchandise
     template_name = 'blogapp/max_discount.html'
     context_object_name = 'merch'
-    '''def get_queryset(self):
-        return Merchandise().get_max_discount()'''
+    def get_queryset(self):
+        return Merchandise().get_max_discount()
     def get_context_data(self, *args, **kwargs):
         """
         Отвечает за передачу параметров в контекст
