@@ -24,7 +24,10 @@
             <tbody>
              {% for tag in all_tags %}
                 <tr>
-                    <td>{{tag.discount}} % скидка</td>
+                    <td><p>{{tag.discount}} % скидка в магазине {{tag.market_name}}</p>
+                        <p>({{tag.priceBefore}}р) {{tag.priceAfter}}р</p>
+                    </td>
+
                     <td><img src="{{tag.imageUrl}}" width="200"></td>
                     <td>{{tag.name}} </td>
                 </tr>
