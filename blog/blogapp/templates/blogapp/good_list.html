@@ -30,7 +30,9 @@
 
         </a>
          </h2>
+        {% if user.is_authenticated %}
         /
+
         <a href ="{% url 'blog:good_update' pk=item.pk %}">
             Изменить
         </a>
@@ -38,14 +40,16 @@
         <a href ="{% url 'blog:good_delete' pk=item.pk %}">
             Удалить
         </a>
-
+        {% endif %}
     </li>
 
     {% endfor %}
+         {% if user.is_authenticated %}
         <h2 class="post-title">
         <a href ="{% url 'blog:good_create' %}">
             Создать
         </a>
          </h2>
+        {% endif %}
 </ul>
 {% endblock %}

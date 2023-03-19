@@ -22,18 +22,31 @@ from os import getenv,path,environ
 dotenv_path = (BASE_DIR.parent / '.env').__str__()
 if path.exists(dotenv_path):
     load_dotenv(dotenv_path)
+    SECRET_KEY = getenv('SECRET_KEY')
+    NAME = getenv('NAME')
+    ENGINE = getenv('ENGINE')
+    USER = getenv('USER')
+    PASSWORD = getenv('PASSWORD')
+    HOST = getenv('HOST')
+    PORT = getenv('PORT')
     print(".env: ok " + dotenv_path)
 else:
     print(".env: err " + dotenv_path)
+    SECRET_KEY = environ.get("SECRET_KEY")
+    NAME = environ.get("NAME")
+    ENGINE = environ.get("ENGINE")
+    USER = environ.get("USER")
+    PASSWORD = environ.get("PASSWORD")
+    HOST = environ.get("HOST")
+    PORT = environ.get("PORT")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -86,12 +99,27 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Указываем доступные хосты
+ALLOWED_HOSTS = ['*']
+
+# настраиваем базу данных
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': NAME,
+        'ENGINE': ENGINE,
+        'USER': USER,
+        'PASSWORD': PASSWORD,
+        'HOST': HOST,
+        'PORT': PORT
     }
 }
+
+
 
 
 # Password validation
