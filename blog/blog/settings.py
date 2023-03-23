@@ -25,20 +25,24 @@ if path.exists(dotenv_path):
     SECRET_KEY = getenv('SECRET_KEY')
     NAME = getenv('NAME')
     ENGINE = getenv('ENGINE')
-    USER = getenv('USER')
+    USER = getenv('USER_PG')
     PASSWORD = getenv('PASSWORD')
     HOST = getenv('HOST')
     PORT = getenv('PORT')
+    EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
     print(".env: ok " + dotenv_path)
 else:
     print(".env: err " + dotenv_path)
     SECRET_KEY = environ.get("SECRET_KEY")
     NAME = environ.get("NAME")
     ENGINE = environ.get("ENGINE")
-    USER = environ.get("USER")
+    USER = environ.get("USER_PG")
     PASSWORD = environ.get("PASSWORD")
     HOST = environ.get("HOST")
     PORT = environ.get("PORT")
+    EMAIL_HOST_USER = environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = environ.get("EMAIL_HOST_PASSWORD")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -165,8 +169,14 @@ STATICFILES_DIRS = [path.join(BASE_DIR,'static')]
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = path.join(BASE_DIR, 'temp/emailfolder')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 # Переназначение модели пользователя
 AUTH_USER_MODEL = 'usersapp.BlogUser'

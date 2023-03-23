@@ -67,16 +67,20 @@ class SendFormView(FormView):
         name = form.cleaned_data['name']
         message = form.cleaned_data['message']
         email = form.cleaned_data['email']
-        merch = Merchandise.objects.all()
+        merch = Merchandise.objects.filter(user = self.request.user)
         list_result = [entry.name + ' в ' + entry.market_name for entry in merch]  # converts QuerySet into Python list
         myString = '\n'.join(list_result)
         send_mail(
-            'Contact message',
+            'Это список продуктов со скидками',
             f'{name}, сообщаю, что {message}\nНе забудь купить:\n{myString}',
-            'from@example.com',
+            'pav9551@yandex.ru',
             [email],
-            fail_silently=True,
+            fail_silently=False,
         )
+
+        #send_mail('Django mail', 'This e-mail was sent with Django.',
+                  #'testnotion45@gmail.com', ['pav9551@yandex.ru'], fail_silently=False)
+
         return super().form_valid(form)
 class GoodListView(ListView):
     model = Good
