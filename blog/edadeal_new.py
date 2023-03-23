@@ -8,7 +8,8 @@ from google.protobuf.json_format import MessageToJson#protobuf
 import offers_pb2#
 
 from django.core.management.base import BaseCommand
-from blogapp.models import Category, Tag, Post, Good, Merchandise, Shop
+#from blogapp.models import Category, Tag, Post, Good, Merchandise, Shop
+#from usersapp.models import BlogUser
 
 def parse_page(city = "moskva", shop = "lenta-super", page_num = 25):
     """
@@ -29,10 +30,12 @@ class ED:
     city = "moskva"
     shop = "lenta-super"
     GOODS = 'goods.xlsx'
-    def __init__(self, CITY = city, SHOP = shop):
+    #superuser = BlogUser.objects.filter(is_superuser=True)
+    def __init__(self, CITY = city, SHOP = shop, user = 'pavel'):
         self.city = CITY
         self.shop = SHOP
         self.excel_data_df = pd.DataFrame()
+        self.user = user
     def load_xlsx(self,search_goods=GOODS):
         self.search_goods = search_goods
         print(search_goods)
@@ -74,48 +77,3 @@ class ED:
         data.to_excel(f"{self.shop}.xlsx", index=False)
         print(f"Данные выгружены в файл {self.shop}.xlsx")
         return data
-    def save_goods_to_base(self):
-        for item in self.excel_data_df.name:
-            good, created = Good.objects.get_or_create(name=item)
-    def load_goods_from_base(self):
-        goods = Good.objects.all()
-        list_result = [entry.name for entry in goods]  # converts QuerySet into Python list
-        data = {'name': list_result}
-        self.excel_data_df = pd.DataFrame(data, columns=['name'])
-        print(self.excel_data_df)
-    def search_and_refrash(self):
-        data_frame = pd.DataFrame()
-        if self.df_res.empty:
-            print(f'Магазин {self.shop} не предоставил скидки')
-            return -2
-        for good in self.excel_data_df.name:
-            count = 0
-            for good_discount in self.df_res.name:
-                result = re.match(good, good_discount)
-                if ((result is None) == False):
-                    df = pd.DataFrame({
-                    'count': [count],
-                    'good': [good],
-                    'name': [good_discount]})
-                    data_frame = pd.concat([data_frame, df])
-                count = count + 1
-        if data_frame.empty:
-            print(f'Магазин {self.shop} не предоставил скидки на данные товары')
-            return -1
-        data = data_frame.merge(self.df_res, on=['name'], how='left')
-
-        data = data.drop_duplicates(subset=['name'])
-        #data.to_excel(f"{self.shop}.xlsx", index=False)
-        data = data.reset_index()
-        #data_frame.to_excel("output2.xlsx", index=False)
-        shop, created = Shop.objects.get_or_create(name=self.shop)
-        for index, row in data.iterrows():
-            print(row['good'],"-", row['name'])
-            if (pd.isna(row['amount']) == True):
-                row['amount'] = 0.0
-            merch, created = Merchandise.objects.get_or_create(
-                name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
-                priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
-                startDate = row['startDate'], endDate = row['endDate'], market_name = self.shop, market = shop)
-        print(f"Данные по {self.shop} выгружены в базу")
-        return 0

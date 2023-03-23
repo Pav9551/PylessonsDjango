@@ -22,18 +22,35 @@ from os import getenv,path,environ
 dotenv_path = (BASE_DIR.parent / '.env').__str__()
 if path.exists(dotenv_path):
     load_dotenv(dotenv_path)
+    SECRET_KEY = getenv('SECRET_KEY')
+    NAME = getenv('NAME')
+    ENGINE = getenv('ENGINE')
+    USER = getenv('USER_PG')
+    PASSWORD = getenv('PASSWORD')
+    HOST = getenv('HOST')
+    PORT = getenv('PORT')
+    EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
     print(".env: ok " + dotenv_path)
 else:
     print(".env: err " + dotenv_path)
+    SECRET_KEY = environ.get("SECRET_KEY")
+    NAME = environ.get("NAME")
+    ENGINE = environ.get("ENGINE")
+    USER = environ.get("USER_PG")
+    PASSWORD = environ.get("PASSWORD")
+    HOST = environ.get("HOST")
+    PORT = environ.get("PORT")
+    EMAIL_HOST_USER = environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = environ.get("EMAIL_HOST_PASSWORD")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -45,7 +62,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogapp'# подключение нашего приложения
+    'blogapp',# подключение нашего приложения
+    'usersapp',# подключение нашей админки
+    'django_extensions',
+    'debug_toolbar'
+
 ]
 
 MIDDLEWARE = [
@@ -56,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -81,12 +103,27 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Указываем доступные хосты
+ALLOWED_HOSTS = ['*']
+
+# настраиваем базу данных
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': NAME,
+        'ENGINE': ENGINE,
+        'USER': USER,
+        'PASSWORD': PASSWORD,
+        'HOST': HOST,
+        'PORT': PORT
     }
 }
+
+
 
 
 # Password validation
@@ -132,5 +169,29 @@ STATICFILES_DIRS = [path.join(BASE_DIR,'static')]
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = path.join(BASE_DIR, 'temp/emailfolder')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+# Переназначение модели пользователя
+AUTH_USER_MODEL = 'usersapp.BlogUser'
+
+# Переходы
+# Куда идти после логина
+LOGIN_REDIRECT_URL = '/'
+# Куда идти после выхода
+LOGOUT_REDIRECT_URL = '/'
+# Куда идти на логин
+LOGIN_URL = '/users/login/'
+
+# django-debug-toolbar
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
