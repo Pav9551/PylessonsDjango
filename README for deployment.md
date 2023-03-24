@@ -43,7 +43,7 @@ sudo systemctl status docker
 sudo apt -y install mc
 
 sudo userdel -f deploy
-sudo useradd -G adm -p P264575p -s /bin/bash deploy
+sudo useradd -G adm -p password -s /bin/bash deploy
 passwd deploy
 usermod -aG root deploy
 usermod -aG sudo deploy
