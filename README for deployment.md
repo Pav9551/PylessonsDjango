@@ -204,12 +204,13 @@ server {
 }
 ```
 ## Перезагрузка сервисов и установка локалей
+```curl 
 service gunicorn restart
 service nginx restart
 service nginx status
 
 dpkg-reconfigure locales
-
+```
 Были проблемы с кодировкой символов, я
 включил все локали, перезагрузил и выключил все локали.
 Перезагрузил и включл нужные локали.
