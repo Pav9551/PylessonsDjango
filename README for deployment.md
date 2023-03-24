@@ -169,6 +169,7 @@ ExecStart=/home/deploy/PylessonsDjango/env/bin/gunicorn --access-logfile - --wor
 [Install]
 WantedBy=multi-user.target
  ```
+ - добавить указанного в файле пользователя в группу www-data
 ```curl
 sudo usermod -aG www-data root
 groups root
