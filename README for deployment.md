@@ -12,7 +12,7 @@
 ```
 #### Шаблон сайта взят с https://startbootstrap.com/theme/clean-blog
 #### Диаграмма развертывания представлена на рисунке
-![Alt-текст](https://github.com/Pav9551/PylessonsDjango/blob/master/UML_Deployment.png "Deployment")
+![Alt-текст](https://github.com/Pav9551/PylessonsDjango/blob/nu-28-postgre-edadeal/UML_Deployment.png "Deployment")
 ## Оглавление
 
 1. [Требования к операционной системе](#Требования-к-операционной-системе)
