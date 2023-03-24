@@ -40,8 +40,6 @@ apt-cache policy docker-ce
 sudo apt install docker-ce
 sudo systemctl status docker
 
-sudo apt -y install mc
-
 sudo userdel -f deploy
 sudo useradd -G adm -p password -s /bin/bash deploy
 passwd deploy
@@ -55,10 +53,11 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 cd /home/deploy
 sudo mkdir docker-compose
+sudo apt -y install mc
+```
+ - содержимое  docker-compose.yaml
 
-docker-compose.yaml
-
---------------------------------------
+```curl  
 version: '3.7'
 services:
   postgres:
@@ -92,11 +91,11 @@ services:
       - "8080:80"
     depends_on: 
       - postgres
-----------------------------------------
+```
 
-./postgres/docker_postgres_init.sql
+ - содержимое ./postgres/docker_postgres_init.sql
 
------------------------------------------
+```curl  
 CREATE USER user2 WITH PASSWORD 'PASSWORD';
 GRANT pg_read_all_data TO user2;
 
@@ -108,8 +107,7 @@ GRANT ALL PRIVILEGES ON DATABASE db TO django;
 ALTER ROLE django SET CLIENT_ENCODING TO 'UTF8';
 ALTER ROLE django SET default_transaction_isolation TO 'READ COMMITTED';
 ALTER ROLE django SET TIME ZONE 'Europe/Moscow';
-
------------------------------------------------
+```
 
 
 ```curl 
