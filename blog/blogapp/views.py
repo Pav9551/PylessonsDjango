@@ -116,7 +116,6 @@ class GoodDetailView(DetailView):
         """
         good = get_object_or_404(Good, pk=self.good_id)
         if (str(self.request.user) == 'AnonymousUser'):
-            print('AnonymousUser')
             user = BlogUser.objects.filter(is_superuser=True)
             merch = Merchandise.objects.filter(user = user[0]).filter(good = good)
         else:
