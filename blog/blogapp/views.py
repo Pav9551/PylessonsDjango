@@ -115,7 +115,7 @@ class GoodDetailView(DetailView):
         :return:
         """
         good = get_object_or_404(Good, pk=self.good_id)
-        merch = Merchandise.objects.filter(good = good)
+        merch = Merchandise.objects.filter(user = self.request.user).filter(good = good)
         self.len_merch = len(merch)
         return merch
     def get_context_data(self, *args, **kwargs):
