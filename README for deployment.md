@@ -169,6 +169,10 @@ ExecStart=/home/deploy/PylessonsDjango/env/bin/gunicorn --access-logfile - --wor
 [Install]
 WantedBy=multi-user.target
  ```
+```curl
+sudo usermod -aG www-data root
+groups root
+```
 ## Установка nginx
  - Nginx позволяет увеличить скорость обработки статического контента
 ```curl 
