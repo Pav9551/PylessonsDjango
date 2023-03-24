@@ -109,11 +109,16 @@ ALTER ROLE django SET default_transaction_isolation TO 'READ COMMITTED';
 ALTER ROLE django SET TIME ZONE 'Europe/Moscow';
 ```
 
-
-```curl 
-./restart.sh
-/docker-compose$ docker-compose ps
-exit 
+ - Запустить контейнеры docker-compose скриптом ./restart.sh
+ - содержимое скрипта restart.sh
+```curl
+docker-compose down
+docker-compose build
+docker-compose up -d 
+```
+ - и проверить их работу
+```curl
+docker-compose ps
 ```
 ## Установка сервиса
  - Для работы сервиса необходимо: создать виртуальное окружение, скачать файлы с репозитория и установить необходимые пакты
