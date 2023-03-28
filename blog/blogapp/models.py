@@ -7,6 +7,9 @@ import os
 from pathlib import Path
 from django.utils.functional import cached_property
 # Create your models here.
+class Picture(models.Model):
+    local_url = models.ImageField(upload_to='media', null=True, blank=True)
+    url_to_upload = models.CharField(max_length=200, default='')
 class Category(models.Model):
     #Id не надо, он уже сам появиться
     name = models.CharField(max_length= 16, unique=True)
@@ -92,6 +95,8 @@ class Good(models.Model):
     name = models.CharField(max_length=32, unique=False)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     good_count = models.IntegerField(default=0)
+    #user = models.ManyToManyField(BlogUser)
+    picture = models.ForeignKey(Picture,on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return self.name
     def has_xlsx(self):
