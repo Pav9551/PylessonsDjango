@@ -6,10 +6,9 @@ import pandas as pd
 import os
 from pathlib import Path
 from django.utils.functional import cached_property
+from django.forms import HiddenInput
 # Create your models here.
-class Picture(models.Model):
-    local_url = models.ImageField(upload_to='media', null=True, blank=True)
-    url_to_upload = models.CharField(max_length=200, default='')
+
 class Category(models.Model):
     #Id не надо, он уже сам появиться
     name = models.CharField(max_length= 16, unique=True)
@@ -96,15 +95,21 @@ class Good(models.Model):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     good_count = models.IntegerField(default=0)
     #user = models.ManyToManyField(BlogUser)
-    picture = models.ForeignKey(Picture,on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return self.name
+        #return self.name
+        return (f'{self.user.username}.{self.name}')
     def has_xlsx(self):
         # Build paths inside the project like this: BASE_DIR / 'subdir'.
         BASE_DIR = Path(__file__).resolve().parent.parent
         xlx_file = BASE_DIR / 'goods.xlsx'
         return os.path.isfile(xlx_file)
-
+class Coincider(models.Model):
+    authors = models.ManyToManyField(Good)
+    picture = models.ImageField(upload_to='media/', default='icons8-гастробар-96.png', null=True, blank=True)
+    name = models.CharField(max_length=32, unique=False,null=True, blank=True)
+    def __str__(self):
+        #return self.name
+        return (f'{self.name}')
 #название магазина
 class Shop(models.Model):
     #Id не надо, он уже сам появиться
