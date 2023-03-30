@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post, Tag, Good, Shop, Merchandise,Coincider
+from .models import Category, Post, Tag, Good, Shop, Merchandise,Coincidence
 
 #admin.site.register(Category)
 #admin.site.register(Post)
@@ -7,4 +7,4 @@ from .models import Category, Post, Tag, Good, Shop, Merchandise,Coincider
 admin.site.register(Good)
 admin.site.register(Shop)
 admin.site.register(Merchandise)
-admin.site.register(Coincider)
+admin.site.register(Coincidence)
