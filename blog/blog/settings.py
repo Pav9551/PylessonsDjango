@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'blogapp',# подключение нашего приложения
     'usersapp',# подключение нашей админки
     'django_extensions',
-    'debug_toolbar'
+    'debug_toolbar',
+    'django_cleanup.apps.CleanupConfig',
 
 ]
 
