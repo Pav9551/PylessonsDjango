@@ -229,7 +229,7 @@ class DiscountDetailView(ListView):
         :return:
         """
         context = super().get_context_data(*args, **kwargs)
-        context['title'] = 'страница'
+        context['title'] = 'товары дня'
         # context['max_disc'] = Merchandise().get_max_discount()
         max_disc = Merchandise().get_max_discount_cached
         context['max_disc'] = max_disc
