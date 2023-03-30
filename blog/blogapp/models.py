@@ -6,7 +6,9 @@ import pandas as pd
 import os
 from pathlib import Path
 from django.utils.functional import cached_property
+from django.forms import HiddenInput
 # Create your models here.
+
 class Category(models.Model):
     #Id не надо, он уже сам появиться
     name = models.CharField(max_length= 16, unique=True)
@@ -92,13 +94,47 @@ class Good(models.Model):
     name = models.CharField(max_length=32, unique=False)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     good_count = models.IntegerField(default=0)
+    #user = models.ManyToManyField(BlogUser)
     def __str__(self):
-        return self.name
+        #return self.name
+        return (f'{self.name}')
     def has_xlsx(self):
         # Build paths inside the project like this: BASE_DIR / 'subdir'.
         BASE_DIR = Path(__file__).resolve().parent.parent
         xlx_file = BASE_DIR / 'goods.xlsx'
         return os.path.isfile(xlx_file)
+    #def validate_unique(self, exclude=None):
+    def is_unique(self, name = 'Носки', user = 'user'):
+        print(f'функция.{name}.{user}')
+        user = BlogUser.objects.filter(username=user)
+        coinc, created = Coincidence.objects.get_or_create(name = name)
+        coinc.users.add(user[0])
+        query = Good.objects.filter(name=name, user = user[0]).exists()
+        if query == True:
+            #print(f'Уже существует')
+            return False
+        else:
+            #print(f'Еще не было')
+            return True
+    def del_good(self, name = 'Носки', user = 'user'):
+        print(f'функция.{name}.{user}')
+        user = BlogUser.objects.filter(username=user)
+        coinc, created = Coincidence.objects.get_or_create(name = name)
+        coinc.users.remove(user[0])
+        query = Good.objects.filter(name=name, user = user[0]).exists()
+        if query == True:
+            #print(f'Уже существует')
+            return False
+        else:
+            #print(f'Еще не было')
+            return True
+class Coincidence(models.Model):
+    users = models.ManyToManyField(BlogUser)
+    picture = models.ImageField(upload_to='media/', default='icons8-гастробар-96.png', null=True, blank=True)
+    name = models.CharField(max_length=32, unique=False,null=True, blank=True)
+    def __str__(self):
+        #return self.name
+        return (f'{self.name}')
 
 #название магазина
 class Shop(models.Model):

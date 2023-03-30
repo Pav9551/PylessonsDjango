@@ -16,3 +16,7 @@ mixer == 7.2.2
 django-extensions == 3.2.1
 django-debug-toolbar == 3.8.1
 psycopg2 == 2.9.5
+django-cleanup == 7.0.0
+djangorestframework == 3.14.0
+markdown == 3.4.3
+django-filter == 23.1

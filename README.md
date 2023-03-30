@@ -1,4 +1,4 @@
-# Домашнее задание по Django (python lesson 28)
+# Домашнее задание по Django (python lesson 30) 
 
 ## Web-сервис демонстрирует работу ORM Django framework.
 #### Сервис парсит сайт https://edadeal.ru/ и записывает данные по скидкам в базу данных
