@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good, Merchandise
+from .models import Good, Merchandise, Coincidence
 from .forms import ContactForm,RequestForm, CreateForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
@@ -10,6 +10,7 @@ from usersapp.models import BlogUser
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.db.models import Count
 # Create your views here.
 class MainListView(ListView):
     model = Merchandise
@@ -92,7 +93,23 @@ class GoodListView(ListView):
             user = BlogUser.objects.filter(is_superuser = True)
         queryset = Good.active_objects.get_queryset_user(user[0])
         return queryset
+class CoincidenceListView(ListView):
+    model = Coincidence
+    template_name = 'blogapp/coincidence_list.html'
+    def get_queryset(self):
+        user = BlogUser.objects.filter(username=self.request.user)
+        if len(user) == 0:
+            user = BlogUser.objects.filter(is_superuser = True)
+        #queryset = Coincidence.objects.filter(users__in = user)
+        queryset = Coincidence.objects.annotate(num_related=Count('users')).filter(users__in = user, num_related__gt = 1)
 
+        #queryset = Coincidence.objects.filter(users__in=user)
+        #queryset = Coincidence.objects.filter(users__in=user[0])
+        return queryset
+class CoincidenceDetailView(DetailView):
+    model = Coincidence
+    template_name = 'blogapp/coincidence_detail.html'
+    context_object_name = 'merch'
 class GoodDetailView(DetailView):
 
     model = Good

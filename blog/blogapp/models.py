@@ -135,8 +135,6 @@ class Coincidence(models.Model):
     def __str__(self):
         #return self.name
         return (f'{self.name}')
-    def user_del(self,name,user):
-        pass
 
 #название магазина
 class Shop(models.Model):
