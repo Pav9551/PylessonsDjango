@@ -5,7 +5,7 @@ from usersapp.models import BlogUser
 class BlogUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BlogUser
-        fields =  ['username', 'email', 'is_admin']
+        fields =  ['username']
 class GoodSerializer(serializers.HyperlinkedModelSerializer):
     user = BlogUserSerializer(read_only=True)
     class Meta:
