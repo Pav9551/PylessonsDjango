@@ -15,4 +15,5 @@ urlpatterns = [
     path('max_discount', views.DiscountDetailView.as_view(), name='max_discount'),
     path('coincidence-list', views.CoincidenceListView.as_view(), name='coincidence_list'),
     path('coincidence-ditail/<int:pk>/', views.CoincidenceDetailView.as_view(), name='coincidence_detail'),
+
 ]
