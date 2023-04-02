@@ -18,9 +18,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
-from blogapp.api_view import GoodViewSet
+from blogapp.api_view import GoodViewSet, UsersVeiwSet, MerchVeiwSet
 router = routers.DefaultRouter()
-router.register(r'good', GoodViewSet)
+router.register(r'goods', GoodViewSet)
+router.register(r'users', UsersVeiwSet)
+router.register(r'merch', MerchVeiwSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blogapp.urls', namespace='blog')),
