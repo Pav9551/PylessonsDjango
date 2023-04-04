@@ -249,9 +249,10 @@ class PostCreateView(CreateView):
     form_class = PostForm
     #fields = ('name',)
     model = Post_for_Coincidence
-    success_url = reverse_lazy('blog:good_list')
+    success_url = reverse_lazy('blog:coincidence_list')
     template_name = 'blogapp/post_create.html'
     #exclude = ('user',)
+
     def form_valid(self, form):
         """
         Метод срабатывает после того как форма валидна
@@ -262,6 +263,8 @@ class PostCreateView(CreateView):
 
         #self.request.user - текущий пользователь
         user = self.request.user
+        #print(str(self.request.path)[13:-1])#костыль
+        number = int(str(self.request.path)[13:-1])
         form.instance.user = user
         return super().form_valid(form)
 

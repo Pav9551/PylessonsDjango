@@ -16,6 +16,6 @@ urlpatterns = [
     path('coincidence-list', views.CoincidenceListView.as_view(), name='coincidence_list'),
     path('coincidence-ditail/<int:pk>/', views.CoincidenceDetailView.as_view(), name='coincidence_detail'),
     path('post-ditail/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
-    path('post-create', views.PostCreateView.as_view(), name='post_create'),
+    path('post-create/<int:pk>/', views.PostCreateView.as_view(), name='post_create'),
 
 ]
