@@ -10,9 +10,9 @@
     Токен:
 <span id="token">{% if object.auth_token %} {{object.auth_token}} {% else %} не создан {% endif %}</span>
 
-    <form action="{% url 'users:update_token' %}">
-        <button type="submit" class="btn btn-primary">Refresh token</button>
-    </form>
+  <!--  <form action="{% url 'users:update_token' %}"> -->
+  <!--     <button type="submit" class="btn btn-primary">Refresh token</button> -->
+  <!--   </form> -->
     <hr>
 
 <button class="btn btn-primary" onclick="sendGetRequest()">Refresh token</button>
