@@ -1,5 +1,5 @@
 from django import forms
-from .models import Good
+from .models import Good, Post_for_Coincidence
 MARKETS = [
     ('lenta-super', 'Лента супермаркет'),
     ('5ka', 'Пятерочка'),
@@ -39,7 +39,11 @@ class CreateForm(forms.Form):
         #fields = '__all__'
         # fields = ('name', 'category')
         exclude = ('user',)
-
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post_for_Coincidence
+        #fields= '__all__'
+        exclude = ('user',)
 
 '''class PostForm(forms.ModelForm):
     name = forms.CharField(label='Название',

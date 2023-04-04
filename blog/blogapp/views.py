@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from .models import Good, Merchandise, Coincidence, Post_for_Coincidence
-from .forms import ContactForm,RequestForm, CreateForm
+from .forms import ContactForm,RequestForm, CreateForm, PostForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -241,5 +241,29 @@ class DiscountDetailView(ListView):
         for item in max_disc:
             print(item)
         return context
+def create_post(request):
+    if request.method == 'GET':
+        form = PostForm()
+        return render(request, 'blogapp/post_create.html', context={'form': form})
+class PostCreateView(CreateView):
+    form_class = PostForm
+    #fields = ('name',)
+    model = Post_for_Coincidence
+    success_url = reverse_lazy('blog:good_list')
+    template_name = 'blogapp/post_create.html'
+    #exclude = ('user',)
+    def form_valid(self, form):
+        """
+        Метод срабатывает после того как форма валидна
+        :param form:
+        :return:
+        """
+        #return HttpResponse("Invalid data")
+
+        #self.request.user - текущий пользователь
+        user = self.request.user
+        form.instance.user = user
+        return super().form_valid(form)
+
 
 
