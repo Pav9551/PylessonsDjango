@@ -110,7 +110,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 ALLOWED_HOSTS = ['*']
 
 # настраиваем базу данных
-'''DATABASES = {
+DATABASES = {
     'default': {
         'NAME': NAME,
         'ENGINE': ENGINE,
@@ -119,14 +119,14 @@ ALLOWED_HOSTS = ['*']
         'HOST': HOST,
         'PORT': PORT
     }
-}'''
+}
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}'''
 
 
 
