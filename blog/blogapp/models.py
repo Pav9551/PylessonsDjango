@@ -78,6 +78,16 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     def __str__(self):
         return self.name
+class Post_for_Coincidence(models.Model):
+    name = models.CharField(max_length= 32, unique= True)
+    text = models.TextField()
+    create = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now= True)
+    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+    def __str__(self):
+        #return self.name
+        return (f'{self.name}')
+
 class TimeStamp(models.Model):
     """
     Abstract - для нее не создаются новые таблицы
@@ -132,6 +142,7 @@ class Coincidence(models.Model):
     users = models.ManyToManyField(BlogUser)
     picture = models.ImageField(upload_to='media/', default='icons8-гастробар-96.png', null=True, blank=True)
     name = models.CharField(max_length=32, unique=False,null=True, blank=True)
+    posts = models.ManyToManyField(Post_for_Coincidence)
     def __str__(self):
         #return self.name
         return (f'{self.name}')

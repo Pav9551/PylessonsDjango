@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good, Merchandise, Coincidence
+from .models import Good, Merchandise, Coincidence, Post_for_Coincidence
 from .forms import ContactForm,RequestForm, CreateForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
@@ -110,6 +110,10 @@ class CoincidenceDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/coincidence_detail.html'
     context_object_name = 'merch'
+class PostDetailView(DetailView):
+    model = Coincidence
+    template_name = 'blogapp/post_list.html'
+    context_object_name = 'good'
 class GoodDetailView(DetailView):
 
     model = Good
@@ -174,6 +178,7 @@ class GoodCreateView(CreateView):
             return super().form_valid(form)
         else:
             return redirect('/good-list')
+
 
 class GoodUpdateView(UpdateView):
     #fields = '__all__'

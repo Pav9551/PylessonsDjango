@@ -10,6 +10,9 @@
                 <h3 class="post-subtitle">
                     "{{ merch.name }}" - этот товар ищут пользователи:
                 </h3>
+                         <a href   ="{% url 'blog:post_detail' pk=merch.pk %}">
+                     Написать
+                </a>
         {% if merch.users.count > 0 %}
         <ul>
           {% for related_object in merch.users.all %}
@@ -17,10 +20,12 @@
             <li>{{ related_object.username }} <i>{{ related_object.email}}</i></li>
             </h3>
           {% endfor %}
+
         </ul>
       {% else %}
         <p>No related objects.</p>
       {% endif %}
+
     </div>
 </div>
 {% endblock %}

@@ -33,15 +33,13 @@ class RequestForm(forms.Form):
         initial='moskva'
     )
 
-
-
-
 class CreateForm(forms.Form):
     class Meta:
         model = Good
         #fields = '__all__'
         # fields = ('name', 'category')
         exclude = ('user',)
+
 
 '''class PostForm(forms.ModelForm):
     name = forms.CharField(label='Название',

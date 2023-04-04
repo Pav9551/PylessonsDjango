@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{merch.name}}
+{% endblock%}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+       {% if good.posts.count > 0 %}
+           <h3 class="post-subtitle">
+           "{{ good.name }}" - присоединяйтесь к обсуждению:
+           </h3>
+        <ul>
+          {% for object in good.posts.all %}
+            <h3 class="post-subtitle">
+            <li>{{ object.user.username}}: {{ object.name}} {{ object.text }}</li>
+            </h3>
+          {% endfor %}
+
+        </ul>
+      {% else %}
+        <p>Здесь пока нет записей и Вы можете создать ее.</p>
+      {% endif %}
+
+         {% if user.is_authenticated %}
+
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
