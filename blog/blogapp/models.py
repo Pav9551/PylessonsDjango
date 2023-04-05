@@ -6,7 +6,9 @@ import pandas as pd
 import os
 from pathlib import Path
 from django.utils.functional import cached_property
+from django.forms import HiddenInput
 # Create your models here.
+
 class Category(models.Model):
     #Id не надо, он уже сам появиться
     name = models.CharField(max_length= 16, unique=True)
@@ -76,13 +78,24 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     def __str__(self):
         return self.name
+class Post_for_Coincidence(models.Model):
+    name = models.CharField(max_length= 32, unique= False)
+    text = models.TextField()
+    create = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now= True)
+    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        #return self.name
+        return (f'{self.name}')
+
 class TimeStamp(models.Model):
     """
     Abstract - для нее не создаются новые таблицы
     данные хранятся в каждом наследнике
     """
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    startDate = models.DateTimeField(auto_now_add=True)
+    endDate = models.DateTimeField(auto_now= True)
     class Meta:
         abstract = True
 
@@ -92,13 +105,48 @@ class Good(models.Model):
     name = models.CharField(max_length=32, unique=False)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     good_count = models.IntegerField(default=0)
+    #user = models.ManyToManyField(BlogUser)
     def __str__(self):
-        return self.name
+        #return self.name
+        return (f'{self.name}')
     def has_xlsx(self):
         # Build paths inside the project like this: BASE_DIR / 'subdir'.
         BASE_DIR = Path(__file__).resolve().parent.parent
         xlx_file = BASE_DIR / 'goods.xlsx'
         return os.path.isfile(xlx_file)
+    #def validate_unique(self, exclude=None):
+    def is_unique(self, name = 'Носки', user = 'user'):
+        print(f'функция.{name}.{user}')
+        user = BlogUser.objects.filter(username=user)
+        coinc, created = Coincidence.objects.get_or_create(name = name)
+        coinc.users.add(user[0])
+        query = Good.objects.filter(name=name, user = user[0]).exists()
+        if query == True:
+            #print(f'Уже существует')
+            return False
+        else:
+            #print(f'Еще не было')
+            return True
+    def del_good(self, name = 'Носки', user = 'user'):
+        print(f'функция.{name}.{user}')
+        user = BlogUser.objects.filter(username=user)
+        coinc, created = Coincidence.objects.get_or_create(name = name)
+        coinc.users.remove(user[0])
+        query = Good.objects.filter(name=name, user = user[0]).exists()
+        if query == True:
+            #print(f'Уже существует')
+            return False
+        else:
+            #print(f'Еще не было')
+            return True
+class Coincidence(models.Model):
+    users = models.ManyToManyField(BlogUser)
+    picture = models.ImageField(upload_to='media/', default='icons8-гастробар-96.png', null=True, blank=True)
+    name = models.CharField(max_length=32, unique=False,null=True, blank=True)
+    posts = models.ManyToManyField(Post_for_Coincidence)
+    def __str__(self):
+        #return self.name
+        return (f'{self.name}')
 
 #название магазина
 class Shop(models.Model):
@@ -231,7 +279,25 @@ class Merchandise(TimeStamp):
         print('*******')
         max = Merchandise.objects.order_by('-discount')[:9]
         return max
+def create_new_post(name = 'Рецепт',text = 'Подсолите', user = 'user', id = 0):
+    print(f'функция.{name}.{text}.{user}.{id}')
+    user = BlogUser.objects.filter(username=user)
+    post = Post_for_Coincidence.objects.create(name = name, text =text,user = user[0])
+    coincidence = Coincidence.objects.get(pk=id)
+    coincidence.posts.add(post)
+    #print(coincidence)
 
+    #user = BlogUser.objects.filter(username=user)
+    #coinc, created = Coincidence.objects.get_or_create(name = name)
+    #coinc.users.add(user[0])
+    #query = Good.objects.filter(name=name, user = user[0]).exists()
+    query =True
+    if query == True:
+        #print(f'Уже существует')
+        return False
+    else:
+        #print(f'Еще не было')
+        return True
 
 
 

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Список тегов
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class="col-lg-8 col-md-10 mx-auto">
+        <table class="table">
+            <tbody>
+             {% for item in object_list %}
+                <tr>
+                    <td>
+                        <h2 class="post-title">
+                        <a href ="{% url 'blog:post_list' pk=item.pk %}">
+                        <img src="{{item.picture.url}}" width="80">
+                        {{item.name}}
+                        </a>
+                        </h2>
+                    </td>
+                    <td>
+                        <a href   ="{% url 'blog:coincidence_detail' pk=item.pk %}">
+                        <img src="{% static 'assets/img/icons8-леди-с-почтой-100.png' %}" width="80"> Отправь свой почтовый контакт другим
+                         </a>
+                    </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </div>
+     </div>
+
+
+<div class="col-lg-8 col-md-10 mx-auto">
+        <table class="table">
+        </div>
+</div>
+{% endif %}
+{% endblock %}
