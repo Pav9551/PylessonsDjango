@@ -7,6 +7,17 @@
 {% block content %}
 
 <ul>
+        {% if user.is_authenticated %}
+
+        {% else %}
+            <h2 class="post-title">
+        <a href ="{% url 'users:register' %}">
+            Заригистрируйся, войди и создай свой список товаров для запроса
+        </a>
+            </h2>
+        <hr>
+        <hr>
+        {% endif %}
 
     {% for item in object_list %}
     <li>
