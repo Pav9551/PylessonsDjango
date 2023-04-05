@@ -110,10 +110,19 @@ class CoincidenceDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/coincidence_detail.html'
     context_object_name = 'merch'
+
 class PostListDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/post_list.html'
     context_object_name = 'good'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # get the coincidence object for this view
+        coincidence = self.get_object()
+        # order the posts by their creation time, from newest to oldest
+        ordered_posts = coincidence.posts.order_by('create')
+        context['ordered_posts'] = ordered_posts
+        return context
 class GoodDetailView(DetailView):
 
     model = Good

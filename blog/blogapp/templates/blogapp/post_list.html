@@ -11,7 +11,7 @@
                   Тема - {{ good.name }}:
                 </h3>
         {% if good.posts.count > 0 %}
-        {% for item in good.posts.all %}
+        {% for item in ordered_posts %}
         <div class="post-preview">
             <a >
                 <div class="post-meta">{{item.name}}</div>
