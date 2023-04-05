@@ -1,31 +1,46 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{merch.name}}
-{% endblock%}
+  Главная
+{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-                <h3 class="post-subtitle">
-                    "{{ merch.name }}" - этот товар ищут пользователи:
-                </h3>
-                         <a href   ="{% url 'blog:post_detail' pk=merch.pk %}">
-                     Написать
-                </a>
-        {% if merch.users.count > 0 %}
-        <ul>
-          {% for related_object in merch.users.all %}
-            <h3 class="post-subtitle">
-            <li>{{ related_object.username }} <i>{{ related_object.email}}</i></li>
-            </h3>
-          {% endfor %}
+                 <h3 class="post-title">
 
-        </ul>
-      {% else %}
-        <p>No related objects.</p>
+                     <li><i> "{{ merch.name }}" - этот товар ищут пользователи:</i></li>
+                </h3>
+        {% if merch.users.count > 0 %}
+        {% for related_object in merch.users.all %}
+        <div class="post-preview">
+            <a >
+                <div class="post-meta"><li>{{ related_object.username }} <i>{{ related_object.email}}</i></li></div>
+            </a>
+
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Здесь пока нет записей и Вы можете создать ее.</p>
       {% endif %}
+
 
     </div>
 </div>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

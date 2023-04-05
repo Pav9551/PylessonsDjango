@@ -79,11 +79,12 @@ class Post(models.Model):
     def __str__(self):
         return self.name
 class Post_for_Coincidence(models.Model):
-    name = models.CharField(max_length= 32, unique= True)
+    name = models.CharField(max_length= 32, unique= False)
     text = models.TextField()
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now= True)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+
     def __str__(self):
         #return self.name
         return (f'{self.name}')
@@ -93,8 +94,8 @@ class TimeStamp(models.Model):
     Abstract - для нее не создаются новые таблицы
     данные хранятся в каждом наследнике
     """
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    startDate = models.DateTimeField(auto_now_add=True)
+    endDate = models.DateTimeField(auto_now= True)
     class Meta:
         abstract = True
 
@@ -278,7 +279,25 @@ class Merchandise(TimeStamp):
         print('*******')
         max = Merchandise.objects.order_by('-discount')[:9]
         return max
+def create_new_post(name = 'Рецепт',text = 'Подсолите', user = 'user', id = 0):
+    print(f'функция.{name}.{text}.{user}.{id}')
+    user = BlogUser.objects.filter(username=user)
+    post = Post_for_Coincidence.objects.create(name = name, text =text,user = user[0])
+    coincidence = Coincidence.objects.get(pk=id)
+    coincidence.posts.add(post)
+    #print(coincidence)
 
+    #user = BlogUser.objects.filter(username=user)
+    #coinc, created = Coincidence.objects.get_or_create(name = name)
+    #coinc.users.add(user[0])
+    #query = Good.objects.filter(name=name, user = user[0]).exists()
+    query =True
+    if query == True:
+        #print(f'Уже существует')
+        return False
+    else:
+        #print(f'Еще не было')
+        return True
 
 
 

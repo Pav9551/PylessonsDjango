@@ -1,5 +1,5 @@
 from django import forms
-from .models import Good, Post_for_Coincidence
+from .models import Good, Post_for_Coincidence, Coincidence
 MARKETS = [
     ('lenta-super', 'Лента супермаркет'),
     ('5ka', 'Пятерочка'),
@@ -40,6 +40,8 @@ class CreateForm(forms.Form):
         # fields = ('name', 'category')
         exclude = ('user',)
 class PostForm(forms.ModelForm):
+    #сoincid = forms.ModelMultipleChoiceField(queryset=Coincidence.objects.all(),
+                                         #widget=forms.CheckboxSelectMultiple())
     class Meta:
         model = Post_for_Coincidence
         #fields= '__all__'

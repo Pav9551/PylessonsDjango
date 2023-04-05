@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 
 {% block title %}
-Создание поста
-{% endblock %}
+{{merch.name}}
+{% endblock%}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-        <p>Форма отправки списка товаров на почту:</p>
-        <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
-        <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
-        <!-- To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
-        <form method="post" id="contactForm">
-            {% csrf_token %}
-            {{ form.as_ul }}
-            <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+                <h3 class="post-subtitle">
+        "{{ merch.name }}" - этот товар ищут пользователи:
+        {% if merch.users.count > 0 %}
+        <ul>
+          {% for related_object in merch.users.all %}
+            <h3 class="post-subtitle">
+            <li>{{ related_object.username }} <i>{{ related_object.email}}</i></li>
+            </h3>
+          {% endfor %}
 
-        </form>
+        </ul>
+      {% else %}
+        <p>No related objects.</p>
+      {% endif %}
+
     </div>
 </div>
 {% endblock %}

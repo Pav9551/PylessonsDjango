@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good, Merchandise, Coincidence, Post_for_Coincidence
+from .models import Good, Merchandise, Coincidence, Post_for_Coincidence, create_new_post
 from .forms import ContactForm,RequestForm, CreateForm, PostForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
@@ -110,7 +110,7 @@ class CoincidenceDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/coincidence_detail.html'
     context_object_name = 'merch'
-class PostDetailView(DetailView):
+class PostListDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/post_list.html'
     context_object_name = 'good'
@@ -263,10 +263,16 @@ class PostCreateView(CreateView):
 
         #self.request.user - текущий пользователь
         user = self.request.user
+        #list_сoincid = form.cleaned_data['сoincid']
+        name = form.cleaned_data['name']
+        text = form.cleaned_data['text']
+        #print(name)
         #print(str(self.request.path)[13:-1])#костыль
         number = int(str(self.request.path)[13:-1])
         form.instance.user = user
-        return super().form_valid(form)
+        redir_url = '/post-list/' + str(self.request.path)[13:-1]+'/'
+        create_new_post(name,text,user,number)
+        return redirect(redir_url)
 
 
 
