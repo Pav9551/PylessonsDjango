@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+Профиль
+{% endblock %}
+
+{% block content %}
+    Профиль пользователя {{object.username}}
+    <hr>
+    Токен:
+<span id="token">{% if object.auth_token %} {{object.auth_token}} {% else %} не создан {% endif %}</span>
+
+  <!--  <form action="{% url 'users:update_token' %}"> -->
+  <!--     <button type="submit" class="btn btn-primary">Refresh token</button> -->
+  <!--   </form> -->
+    <hr>
+
+<button class="btn btn-primary" onclick="sendGetRequest()">Refresh token</button>
+<script>
+function sendGetRequest() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/users/update-token-ajax/');
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      // Success! Do something with the response data
+      console.log(xhr.responseText);
+           // Success! Parse the response as JSON
+      var response = JSON.parse(xhr.responseText);
+      // Access the 'token' property and update the span
+      document.getElementById('token').innerHTML = response.key;
+    } else {
+      // Oops! Something went wrong
+      console.log('Request failed.  Returned status of ' + xhr.status);
+    }
+  };
+  xhr.send();
+}
+</script>
+
+
+
+
+
+{% endblock %}

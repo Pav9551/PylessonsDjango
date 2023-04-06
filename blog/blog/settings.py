@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
 
 ]
@@ -109,7 +110,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 ALLOWED_HOSTS = ['*']
 
 # настраиваем базу данных
-'''DATABASES = {
+DATABASES = {
     'default': {
         'NAME': NAME,
         'ENGINE': ENGINE,
@@ -118,14 +119,14 @@ ALLOWED_HOSTS = ['*']
         'HOST': HOST,
         'PORT': PORT
     }
-}'''
+}
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}'''
 
 
 
@@ -153,7 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru' #LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -207,6 +208,10 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }

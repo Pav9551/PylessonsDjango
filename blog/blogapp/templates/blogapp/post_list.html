@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Главная
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+                 <h3 class="post-title">
+                  Тема - {{ good.name }}:
+                </h3>
+        {% if good.posts.count > 0 %}
+        {% for item in ordered_posts %}
+        <div class="post-preview">
+            <a >
+                <div class="post-meta">{{item.name}}</div>
+                <h6 style="text-indent: 20px;" >
+                   {{item.text}}
+                </h6>
+            </a>
+            <p class="post-meta">Posted by
+                <a href="#">{{item.user.username}}</a>
+                {{item.create}}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Здесь пока нет записей и Вы можете создать ее.</p>
+      {% endif %}
+        <!-- Pager -->
+
+        <div class="clearfix">
+            <a class="btn btn-primary float-right" href="{% url 'blog:post_create' pk=good.pk %}">Создать пост &rarr;</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

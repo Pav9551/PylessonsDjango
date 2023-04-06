@@ -8,20 +8,22 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-      {% for item in merch %}
+        {% for item in merch %}
         <div class="post-preview">
             <a href="{% url 'blog:merch' pk=item.pk %}">
                 <h2 class="post-title">
                     {{ item.good }}
                 </h2>
                 <h3 class="post-subtitle">
-                    {{ item.name }}
+                    {{item.name}}
                 </h3>
                 <h3 class="post-subtitle">
                     {{ item.market_name }}
                 </h3>
             </a>
-
+            <p class="post-meta">Posted by
+                <a href="#">{{item.user}}</a>
+                {{item.startDate}}</p>
         </div>
         <hr>
         {% endfor %}

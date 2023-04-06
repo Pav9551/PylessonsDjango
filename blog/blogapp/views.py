@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from .models import Good, Merchandise, Coincidence
-from .forms import ContactForm,RequestForm, CreateForm
+from .models import Good, Merchandise, Coincidence, Post_for_Coincidence, create_new_post
+from .forms import ContactForm,RequestForm, CreateForm, PostForm
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -110,6 +110,19 @@ class CoincidenceDetailView(DetailView):
     model = Coincidence
     template_name = 'blogapp/coincidence_detail.html'
     context_object_name = 'merch'
+
+class PostListDetailView(DetailView):
+    model = Coincidence
+    template_name = 'blogapp/post_list.html'
+    context_object_name = 'good'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # get the coincidence object for this view
+        coincidence = self.get_object()
+        # order the posts by their creation time, from newest to oldest
+        ordered_posts = coincidence.posts.order_by('create')
+        context['ordered_posts'] = ordered_posts
+        return context
 class GoodDetailView(DetailView):
 
     model = Good
@@ -175,6 +188,7 @@ class GoodCreateView(CreateView):
         else:
             return redirect('/good-list')
 
+
 class GoodUpdateView(UpdateView):
     #fields = '__all__'
     fields = ('name',)
@@ -236,5 +250,38 @@ class DiscountDetailView(ListView):
         for item in max_disc:
             print(item)
         return context
+def create_post(request):
+    if request.method == 'GET':
+        form = PostForm()
+        return render(request, 'blogapp/post_create.html', context={'form': form})
+class PostCreateView(CreateView):
+    form_class = PostForm
+    #fields = ('name',)
+    model = Post_for_Coincidence
+    success_url = reverse_lazy('blog:coincidence_list')
+    template_name = 'blogapp/post_create.html'
+    #exclude = ('user',)
+
+    def form_valid(self, form):
+        """
+        Метод срабатывает после того как форма валидна
+        :param form:
+        :return:
+        """
+        #return HttpResponse("Invalid data")
+
+        #self.request.user - текущий пользователь
+        user = self.request.user
+        #list_сoincid = form.cleaned_data['сoincid']
+        name = form.cleaned_data['name']
+        text = form.cleaned_data['text']
+        #print(name)
+        #print(str(self.request.path)[13:-1])#костыль
+        number = int(str(self.request.path)[13:-1])
+        form.instance.user = user
+        redir_url = '/post-list/' + str(self.request.path)[13:-1]+'/'
+        create_new_post(name,text,user,number)
+        return redirect(redir_url)
+
 
 

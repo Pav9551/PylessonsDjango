@@ -90,7 +90,11 @@ sudo fuser -k 8000/tcp
 ```curl 
 http://127.0.0.1:8000/api/
 ```
-
+автоматически рисовать диаграмму отношений классов модели:
+```curl 
+python manage.py graph_models -a -o models.png
+```
+https://russianblogs.com/article/80721384625/
 
 
 
