@@ -79,7 +79,7 @@ class Post(models.Model):
     def __str__(self):
         return self.name
 class Post_for_Coincidence(models.Model):
-    name = models.CharField(max_length= 32, unique= False)
+    name = models.CharField(max_length= 62, unique= False)
     text = models.TextField()
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now= True)
