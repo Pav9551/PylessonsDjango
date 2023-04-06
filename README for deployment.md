@@ -225,6 +225,18 @@ dpkg-reconfigure locales
 Перезагрузил и все заработало.
 
 
+Когда перезаливаю с git, то
+## Перезагрузка сервисов и установка локалей
+```curl 
+source env/bin/activate
+git fetch --all
+git reset --hard origin/master
+git pull origin master
+git checkout origin/nu-32-chat-edadeal
+git checkout origin/master
+git checkout origin/nu-32-chat-edadeal
+git pull origin master
+```
 
 
 
