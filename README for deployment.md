@@ -225,8 +225,8 @@ dpkg-reconfigure locales
 Перезагрузил и все заработало.
 
 
-Когда перезаливаю с git, то
-## Перезагрузка сервисов и установка локалей
+
+## Когда перезаливаю с git, то
 ```curl 
 cd /home/deploy/PylessonsDjango
 source env/bin/activate
