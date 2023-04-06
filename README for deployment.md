@@ -235,6 +235,7 @@ git reset --hard origin/master
 git pull origin master
 git checkout origin/master
 git checkout origin/nu-32-chat-edadeal
+sudo reboot
 ```
 
 
