@@ -226,6 +226,18 @@ dpkg-reconfigure locales
 
 
 
+## Когда перезаливаю с git, то
+```curl 
+cd /home/deploy/PylessonsDjango
+source env/bin/activate
+git fetch --all
+git reset --hard origin/master
+git pull origin master
+git checkout origin/master
+git checkout origin/nu-32-chat-edadeal
+sudo reboot
+```
+
 
 
 

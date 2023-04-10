@@ -18,12 +18,52 @@
         <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
         <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
         <!-- To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
-        <form method="post" id="contactForm">
-            {% csrf_token %}
-            {{ form.as_ul }}
-            <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+<style>
+    .my-form li {
+        margin-bottom: 10px;
+    }
+    .my-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .my-form input[type="text"], .my-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .my-form button[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .my-form button[type="submit"]:hover {
+        background-color: #3e8e41;
+    }
+    .error {
+        color: red;
+    }
+</style>
 
-        </form>
+        <form method="post">
+    {% csrf_token %}
+    <ul class="my-form">
+        {% for field in form %}
+        <li>
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+            <div class="error">{{ field.errors|join:", " }}</div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <button type="submit" class="btn btn-primary" id="sendMessageButton1">Send</button>
+</form>
     </div>
 </div>
 {% endblock %}
