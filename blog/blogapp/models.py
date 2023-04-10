@@ -210,6 +210,8 @@ class Merchandise(TimeStamp):
                 row['amount'] = 0.0
             if (pd.isna(row['discount']) == True):
                 row['discount'] = 0.0
+                row['priceBefore'] = row['priceAfter']
+
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
@@ -261,6 +263,7 @@ class Merchandise(TimeStamp):
                 row['amount'] = 0.0
             if (pd.isna(row['discount']) == True):
                 row['discount'] = 0.0
+                row['priceBefore'] = row['priceAfter']
             merch, created = Merchandise.objects.get_or_create(
                 name=row['name'], good = row['good'], imageUrl = row['imageUrl'], priceBefore = row['priceBefore'],
                 priceAfter=row['priceAfter'], amount=row['amount'], discount=row['discount'],
