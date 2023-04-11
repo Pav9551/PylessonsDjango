@@ -7,10 +7,13 @@ from django.views.generic import CreateView, DetailView
 from .models import BlogUser
 from rest_framework.authtoken.models import Token
 from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect
 from django.http import JsonResponse
 # Create your views here.
 class UserLoginView(LoginView):
     template_name = 'usersapp/login.html'
+    #success_url = reverse_lazy('blog:good_list')
+    #success_url = reverse_lazy('blog:good_list')
 
 
 class UserCreateView(CreateView):

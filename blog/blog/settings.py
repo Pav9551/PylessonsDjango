@@ -191,7 +191,7 @@ AUTH_USER_MODEL = 'usersapp.BlogUser'
 
 # Переходы
 # Куда идти после логина
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/good-list'
 # Куда идти после выхода
 LOGOUT_REDIRECT_URL = '/'
 # Куда идти на логин
