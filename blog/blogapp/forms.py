@@ -4,6 +4,10 @@ MARKETS = [
     ('lenta-super', 'Лента супермаркет'),
     ('5ka', 'Пятерочка'),
     ('perekrestok', 'Перекресток'),
+   # ('azbuka_vkusa', 'Азбука Вкуса'),
+    ('eurospar', 'Eurospar'),
+
+
 ]
 CITIES = [
     ('moskva', 'Москва'),
